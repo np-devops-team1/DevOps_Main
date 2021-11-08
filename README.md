@@ -15,7 +15,7 @@ Example 2: `docs: Update README to show virtual environment commands`
 | Commit Type | Title                    | Description                                                                                    | Emoji |
 | ----------- | ------------------------ | ---------------------------------------------------------------------------------------------- | ----- |
 | feat        | Features                 | A new feature                                                                                  | ✨    |
-| fix         | Bug Fixes                | A bug Fix                                                                                      | 🐛    |
+| fix         | Bug Fixes                | A bug fix                                                                                      | 🐛    |
 | docs        | Documentation            | Documentation only changes                                                                     | 📚    |
 | style       | Styles                   | Changes that do not affect the meaning of the code (e.g. white-space, formatting, semi-colons) | 💎    |
 | refactor    | Code Refactoring         | A code change that neither fixes a bug nor adds a feature                                      | 📦    |
@@ -61,14 +61,14 @@ python -m pip freeze > requirements.txt
 
 ### Scrum Master
 
-Lim Dong Kiat
+- Lim Dong Kiat
 
 ### Developers
 
-Danny Chan Yu Tian
-Lee Quan Sheng
+- Danny Chan Yu Tian
+- Lee Quan Sheng
 
 ### Quality Assurance
 
-Caleb Goh
-Swee Kah Ho
+- Caleb Goh En Yu
+- Swee Kah Ho
