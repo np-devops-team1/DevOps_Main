@@ -44,7 +44,3 @@ new dependencies, new scripts, etc._
 **New dependencies**:
 
 - `dependency` : dependency details
-
-**New dev dependencies**:
-
-- `dependency` : dependency details
