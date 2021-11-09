@@ -24,6 +24,17 @@ Example 2: `docs: Update README to show virtual environment commands`
 | ci          | Continuous Integrations  | Changes to our CI configuration files and scripts                                              | ⚙️    |
 | chore       | Chores                   | Changes to the build or auxiliary tools and libraries such as documentation generation         | ♻️    |
 
+## Flake8 Linting Guide
+
+- files that contain this line are skipped:
+  `# flake8: noqa`
+
+- lines that contain a `# noqa` comment at the end will not issue warnings.
+
+- use `flake8` to invoke flake8 for all working files in directory, or `flake8 <filename>.py` for a specific file
+
+- flake8 linting configuration can be changed in the `.flake8` file, but changing it is not advisable
+
 ## Setting Up Project
 
 ### Create Virtual Environment
