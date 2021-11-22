@@ -26,16 +26,6 @@
 import random
 
 # function for main menu
-def FirstMenu():
-    print("Welcome, mayor of Simp City!")
-    print("------------------------------")
-    print("1- Start new game")
-    print("2- Load saved game")
-    print("0- Exit")
-    option = (int)(input("Your choice?"))
-    MenuSelection(option)
-
-
 def MenuSelection(option):
     if option == 1:
         StartGameFunc()
@@ -46,3 +36,18 @@ def MenuSelection(option):
     else:
         print("invalid option, try again")
         FirstMenu()
+
+def FirstMenu():
+    print("Welcome, mayor of Simp City!")
+    print("------------------------------")
+    print("1- Start new game")
+    print("2- Load saved game")
+    print("0- Exit")
+    option = (int)(input("Your choice?"))
+    MenuSelection(option)
+
+def StartGameFunc():
+    print("start")
+
+def LoadGameFunc():
+    print("load")
