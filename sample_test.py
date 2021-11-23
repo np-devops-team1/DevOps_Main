@@ -3,5 +3,5 @@ def sample_func(x):
 
 
 def test_answer():
-    assert sample_func(3) == 4
     print("\n")
+    assert sample_func(3) == 4
