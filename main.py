@@ -12,7 +12,7 @@
 #  ['A4','B4','C4','D4']]
 
 # Game Options
-#-----------------------#
+# -----------------------#
 # 6 Options
 # 1. Place Random Building
 # 2. Place Random Building
