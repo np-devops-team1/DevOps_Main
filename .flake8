@@ -1,0 +1,8 @@
+[flake8]
+ignore = D203
+exclude =
+    .git,
+    .github,
+    __pycache__,
+    dev_env
+max-complexity = 10
