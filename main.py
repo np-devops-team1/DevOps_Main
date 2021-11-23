@@ -43,7 +43,7 @@ def FirstMenu():
     print("1- Start new game")
     print("2- Load saved game")
     print("0- Exit")
-    option = (int)(input("Your choice?"))
+    option = (int)(input("Your choice? "))
     MenuSelection(option)
 
 
@@ -53,3 +53,5 @@ def StartGameFunc():
 
 def LoadGameFunc():
     print("load")
+
+FirstMenu()
