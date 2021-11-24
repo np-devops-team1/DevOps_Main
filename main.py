@@ -24,6 +24,42 @@
 
 # Imports
 
+# for mapping locations to buildings
+plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
+         "B2": "\t", "B3": "\t", "B4": "\t", "C1": "\t", "C2": "\t",
+         "C3": "\t", "C4": "\t", "D1": "\t", "D2": "\t", "D3": "\t",
+         "D4": "\t", "Turn": "0", "lastPlace": ""}
+buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
+
+bchCount = 8
+facCount = 8
+hseCount = 8
+shpCount = 8
+hwyCount = 8
+lastPlace = ""  # stores last plot built upon
+
+
+# module displays game/city grid
+def CityMapFunc():
+    print("\t     A \t     B \t     C \t     D")
+    for i in range(4):
+        print("\t   --------------------------------")
+        if i == 0:
+            print("\t", i + 1, "| ", plots["A1"], " | ", plots["B1"],
+                  " | ", plots["C1"], " |", plots["D1"], "  | ")
+        if i == 1:
+            print("\t", i + 1, "| ", plots["A2"], " | ", plots["B2"],
+                  " | ", plots["C2"], " |", plots["D2"], "  | ")
+        if i == 2:
+            print("\t", i + 1, "| ", plots["A3"], " | ", plots["B3"],
+                  " | ", plots["C3"], " |", plots["D3"], "  | ")
+        if i == 3:
+            print("\t", i + 1, "| ", plots["A4"], " | ", plots["B4"],
+                  " | ", plots["C4"], " |", plots["D4"], "  | ")
+
+    print("\t   --------------------------------")
+
+
 # function for main menu
 def MenuSelection(option):
     if option == 1:
