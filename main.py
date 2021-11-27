@@ -73,56 +73,29 @@ def MenuSelection(option):
         FirstMenu()
 
 
-# module returns a list of adjacent locations to the function parameter 
+# module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
-    A1 = ["A2", "B1"]
-    A2 = ["A1", "A3", "B2"]
-    A3 = ["A2", "A4", "B3"]
-    A4 = ["A3", "B4"]
-    B1 = ["A1", "B2", "C1"]
-    B2 = ["A2", "B1", "B3", "C2"]
-    B3 = ["A3", "B2", "B4", "C3"]
-    B4 = ["A4", "B3", "C4"]
-    C1 = ["B1", "C2", "D1"]
-    C2 = ["B2", "C1", "C3", "D2"]
-    C3 = ["B3", "C2", "C4", "D3"]
-    C4 = ["B4", "C3", "D4"]
-    D1 = ["C1", "D2"]
-    D2 = ["C2", "D1", "D3"]
-    D3 = ["D2", "D4", "C3"]
-    D4 = ["D3", "C4"]
-    if loc == "A1":
-        return A1
-    if loc == "A2":
-        return A2
-    if loc == "A3":
-        return A3
-    if loc == "A4":
-        return A4
-    if loc == "B1":
-        return B1
-    if loc == "B2":
-        return B2
-    if loc == "B3":
-        return B3
-    if loc == "B4":
-        return B4
-    if loc == "C1":
-        return C1
-    if loc == "C2":
-        return C2
-    if loc == "C3":
-        return C3
-    if loc == "C4":
-        return C4
-    if loc == "D1":
-        return D1
-    if loc == "D2":
-        return D2
-    if loc == "D3":
-        return D3
-    if loc == "D4":
-        return D4
+    locationDic = {"A1": ["A2", "B1"],
+                   "A2": ["A1", "A3", "B2"],
+                   "A3": ["A2", "A4", "B3"],
+                   "A4": ["A3", "B4"],
+                   "B1": ["A1", "B2", "C1"],
+                   "B2": ["A2", "B1", "B3", "C2"],
+                   "B3": ["A3", "B2", "B4", "C3"],
+                   "B4": ["A4", "B3", "C4"],
+                   "C1": ["B1", "C2", "D1"],
+                   "C2": ["B2", "C1", "C3", "D2"],
+                   "C3": ["B3", "C2", "C4", "D3"],
+                   "C4": ["B4", "C3", "D4"],
+                   "D1": ["C1", "D2"],
+                   "D2": ["C2", "D1", "D3"],
+                   "D3": ["D2", "D4", "C3"],
+                   "D4": ["D3", "C4"]}
+
+    if(loc in locationDic.keys()):
+        return locationDic.get(loc)
+    else:
+        raise ValueError('Unexpected location')
 
 
 def FirstMenu():
