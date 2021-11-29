@@ -97,9 +97,8 @@ def CheckAdjacency(loc):
     else:
         raise ValueError('Unexpected location')
 
+
 # calculate BCH score
-
-
 def calculateBCHscore(place):
     placeSplit = list(place)
     row = placeSplit[0]
@@ -110,6 +109,19 @@ def calculateBCHscore(place):
     else:
         print("Beach score + 1")
         return 1
+
+
+# calculate factory score
+def calculateFACscore(factoryNumber):
+    if (isinstance(factoryNumber, int)):
+        if factoryNumber < 5:
+            print("Factory score + " + factoryNumber)
+            return factoryNumber
+        else:
+            print("Factory score + 1")
+            return 1
+    else:
+        raise TypeError('Invalid Data Type')
 
 
 def FirstMenu():
