@@ -30,6 +30,7 @@ plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
          "C3": "\t", "C4": "\t", "D1": "\t", "D2": "\t", "D3": "\t",
          "D4": "\t", "Turn": "0", "lastPlace": ""}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
+hseScoreDic = { "FAC":1, "BCH":2, "HSE":1, "SHP":1 }
 
 bchCount = 8
 facCount = 8
@@ -97,6 +98,16 @@ def CheckAdjacency(loc):
     else:
         raise ValueError('Unexpected location')
 
+#calculate BCH score
+
+
+def calculateBCHscore(place):
+    if place == "A1" or place == "A2" or place == "A3" or place == "A4" or place == "D1" or place == "D2" or place == "D3" or place == "D4":
+        print("Beach score + 3")
+        return 3
+    else:
+        print("Beach score + 1")
+        return 1
 
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
