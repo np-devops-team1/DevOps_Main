@@ -167,6 +167,14 @@ def calculateHSEscore(plots, item):
         return 0
 
 
+def calculateHWYscore(adjacencylist, plots):
+    for item in adjacencylist:
+        if plots[item] == "HWY":
+            return 1
+            print("Highway Score + 1")
+    return 0
+
+
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
