@@ -98,6 +98,7 @@ def CheckAdjacency(loc):
         raise ValueError('Unexpected location')
 
 
+# Functions to calculate scores
 # calculate BCH score
 def calculateBCHscore(place):
     placeSplit = list(place)
@@ -122,6 +123,41 @@ def calculateFACscore(factoryNumber):
             return 1
     else:
         raise TypeError('Invalid Data Type')
+
+
+def calculateSHPscore(adjacencylist, plots):
+    fcount = 0
+    bcount = 0
+    scount = 0
+    hcount = 0
+    shopScore = 0
+
+    for item in adjacencylist:
+        if plots[item] == "FAC":
+            if fcount == 1:
+                break
+            shopScore = shopScore + 1
+            print("Shop Score + 1")
+            fcount = fcount + 1
+        elif plots[item] == "BCH":
+            if bcount == 1:
+                break
+            shopScore = shopScore + 2
+            print("Shop Score + 2")
+            bcount = bcount + 1
+        elif plots[item] == "HSE":
+            if hcount == 1:
+                break
+            shopScore = shopScore + 1
+            print("Shop Score + 1")
+            hcount = hcount + 1
+        elif plots[item] == "SHP":
+            if scount == 1:
+                break
+            shopScore = shopScore + 1
+            print("Shop Score + 1")
+            scount = scount + 1
+    return shopScore
 
 
 def FirstMenu():
