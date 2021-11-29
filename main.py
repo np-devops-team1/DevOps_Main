@@ -160,6 +160,13 @@ def calculateSHPscore(adjacencylist, plots):
     return shopScore
 
 
+def calculateHSEscore(plots, item):
+    if (plots[item] in hseScoreDic.keys()):
+        return hseScoreDic.get(plots[item])
+    else:
+        return 0
+
+
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
