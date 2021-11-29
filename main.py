@@ -90,8 +90,6 @@ def MenuSelection(option):
 
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
-
-
     if(loc in locationDic.keys()):
         return locationDic.get(loc)
     else:
