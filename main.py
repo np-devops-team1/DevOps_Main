@@ -104,7 +104,7 @@ def calculateBCHscore(place):
     placeSplit = list(place)
     row = placeSplit[0]
     col = placeSplit[1]
-    if (row == "A" or row == "B") and int(col) < 5:
+    if (row == "A" or row == "D") and int(col) < 5:
         print("Beach score + 3")
         return 3
     else:
@@ -173,6 +173,41 @@ def calculateHWYscore(adjacencylist, plots):
             return 1
             print("Highway Score + 1")
     return 0
+
+
+# function incorportes scoring logic for all types of buildings
+def ScoreAdjacentBuildings(plots):
+    TLScore, houseScore, beachScore, factoryScore, shopScore, highwayScore = 0
+    factoryNumber = 0
+
+    for place, build in plots.items():
+        if build == "BCH":
+            beachScore = beachScore + calculateBCHscore(place)
+        print("Beach score : ", beachScore)
+
+        if build == "FAC":
+            factoryNumber = factoryNumber + 1
+            factoryScore = factoryScore + calculateFACscore(factoryNumber)
+        print("Factory score : ", factoryScore)
+
+        if build == "HSE":
+            adjacencylist = CheckAdjacency(place)
+            for item in adjacencylist:
+                houseScore = + calculateHSEscore(plots, item)
+        print("House score : ", houseScore)
+
+        if build == "SHP":
+            adjacencylist = CheckAdjacency(place)
+            shopScore = calculateSHPscore(adjacencylist, plots)
+        print("Shop score : ", shopScore)
+
+        if build == "HWY":
+            adjacencylist = CheckAdjacency(place)
+            highwayScore = + calculateHWYscore(adjacencylist, plots)
+        print("Highway score : ", highwayScore)
+
+    TLScore = beachScore + factoryScore + houseScore + shopScore + highwayScore
+    print("Total Score = ", TLScore)
 
 
 def FirstMenu():
