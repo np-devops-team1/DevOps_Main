@@ -44,9 +44,9 @@ def MenuSelection(option):
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
-    print("1- Start new game")
-    print("2- Load saved game")
-    print("0- Exit")
+    print("1. Start new game")
+    print("2. Load saved game")
+    print("0. Exit")
 
 
 def StartGameFunc():
