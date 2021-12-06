@@ -26,15 +26,19 @@
 
 # function for main menu
 def MenuSelection(option):
-    if option == 1:
-        StartGameFunc()
-    elif option == 2:
-        LoadGameFunc()
-    elif option == 0:
-        exit(0)
-    else:
-        print("invalid option, try again")
+    while True:
         FirstMenu()
+        option = (int)(input("Your choice? "))
+        MenuSelection(option)
+
+        if option == 1:
+            StartGameFunc()
+        elif option == 2:
+            LoadGameFunc()
+        elif option == 0:
+            exit(0)
+        else:
+            print("invalid option, try again")
 
 
 def FirstMenu():
@@ -43,8 +47,6 @@ def FirstMenu():
     print("1- Start new game")
     print("2- Load saved game")
     print("0- Exit")
-    option = (int)(input("Your choice? "))
-    MenuSelection(option)
 
 
 def StartGameFunc():
