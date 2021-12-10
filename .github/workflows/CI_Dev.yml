@@ -30,5 +30,23 @@ jobs:
         
     - name: Begin Pytest
       run: |
-        mv ./tests/*.* ./
-        coverage run -m pytest
+        ls
+        mv ./test_cases/*.* ./
+        pytest --cov -v --junitxml=report.xml
+ 
+    - if: ${{failure()}}       
+      name: Create Issues
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+          title: Build Failed
+          token: ${{secrets.GITHUB_TOKEN}}
+          assignees: ${{github.actor}}
+          labels: worflow-failed
+          body: Workflow failed for commit ${{github.sha}} @ ${{github.ref}}
+    
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.24
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: report.xml  
