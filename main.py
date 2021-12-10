@@ -28,7 +28,7 @@
 def ControlFlow():
     while True:
         MainGame()
-        
+
 
 def MainGame():
     FirstMenu()
@@ -42,6 +42,7 @@ def MainGame():
     else:
         print("invalid option, try again")
 
+        
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
