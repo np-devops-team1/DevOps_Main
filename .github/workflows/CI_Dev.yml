@@ -14,7 +14,7 @@ jobs:
         
     - name: Install Libraries
       run: |
-        pip install flake8 pytest pytest-cov coverage
+        pip install flake8 pytest pytest-cov coverage pytest-mock
       
     - name: Checkout Own Repo
       uses: actions/checkout@v2
