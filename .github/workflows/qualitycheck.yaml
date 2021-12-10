@@ -6,6 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
@@ -20,41 +21,33 @@ jobs:
       - name: Running tests with pytest
         run: |
           pytest
-          - name: Install Libraries
+               
+    - name: Checkout Test Script
+      uses: actions/checkout@v2
+      with:
+        repository: np-devops-team1/DevOps_Dev_UnitTest
+        path: test_cases
+        token: ${{ secrets.DEV_REMOTE }}
+        
+    - name: Begin Pytest
       run: |
-        pip install flake8 pytest pytest-cov coverage
-      
-      - name: Checkout Own Repo
-        uses: actions/checkout@v2
-        with: 
-          repository: np-devops-team1/DevOps_Main
-          
-      - name: Checkout Test Script
-        uses: actions/checkout@v2
-        with:
-          repository: np-devops-team1/DevOps_Dev_UnitTest
-          path: test_cases
-          token: ${{ secrets.DEV_REMOTE }}
-          
-      - name: Begin Pytest
-        run: |
-          ls
-          mv ./test_cases/*.* ./
-          pytest --cov -v --junitxml=report.xml
-  
-      - if: ${{failure()}}       
-        name: Create Issues
-        uses: nashmaniac/create-issue-action@v1.1
-        with:
-            title: Build Failed
-            token: ${{secrets.GITHUB_TOKEN}}
-            assignees: ${{github.actor}}
-            labels: worflow-failed
-            body: Workflow failed for commit ${{github.sha}} @ ${{github.ref}}
-      
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.24
-        if: always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: report.xml
+        ls
+        mv ./test_cases/*.* ./
+        pytest --cov -v --junitxml=report.xml
+ 
+    - if: ${{failure()}}       
+      name: Create Issues
+      uses: nashmaniac/create-issue-action@v1.1
+      with:
+          title: Build Failed
+          token: ${{secrets.GITHUB_TOKEN}}
+          assignees: ${{github.actor}}
+          labels: worflow-failed
+          body: Workflow failed for commit ${{github.sha}} @ ${{github.ref}}
+    
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1.24
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        files: report.xml  
