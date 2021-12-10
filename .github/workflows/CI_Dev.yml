@@ -1,0 +1,34 @@
+name: CI for UnitTest
+
+on:
+  push:
+    branches: [main]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        
+    - name: Install Libraries
+      run: |
+        pip install flake8 pytest pytest-cov coverage
+      
+    - name: Checkout Own Repo
+      uses: actions/checkout@v2
+      with: 
+        repository: np-devops-team1/DevOps_Main
+        
+    - name: Checkout Test Script
+      uses: actions/checkout@v2
+      with:
+        repository: np-devops-team1/DevOps_Dev_UnitTest
+        path: test_cases
+        token: ${{ secrets.DEV_REMOTE }}
+        
+    - name: Begin Pytest
+      run: |
+        mv ./tests/*.* ./
+        coverage run -m pytest
