@@ -93,6 +93,7 @@ def MainGame():
     else:
         print("invalid option, try again")
 
+
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
     if(loc in locationDic.keys()):
@@ -101,7 +102,6 @@ def CheckAdjacency(loc):
         raise ValueError('Unexpected location')
 
 
-        
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
