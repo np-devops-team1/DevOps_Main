@@ -76,7 +76,14 @@ def CityMapFunc():
 
 
 # function for main menu
-def MenuSelection(option):
+def ControlFlow():
+    while True:
+        MainGame()
+
+
+def MainGame():
+    FirstMenu()
+    option = (int)(input("Your choice? "))
     if option == 1:
         StartGameFunc()
     elif option == 2:
@@ -85,8 +92,6 @@ def MenuSelection(option):
         exit(0)
     else:
         print("invalid option, try again")
-        FirstMenu()
-
 
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
@@ -96,14 +101,13 @@ def CheckAdjacency(loc):
         raise ValueError('Unexpected location')
 
 
+        
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
-    print("1- Start new game")
-    print("2- Load saved game")
-    print("0- Exit")
-    option = (int)(input("Your choice? "))
-    MenuSelection(option)
+    print("1. Start new game")
+    print("2. Load saved game")
+    print("0. Exit")
 
 
 def StartGameFunc():
