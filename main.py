@@ -32,7 +32,12 @@ def ControlFlow():
 
 def MainGame():
     FirstMenu()
-    option = (int)(input("Your choice? "))
+
+    try:
+        option = (int)(input("Your choice? "))
+    except:
+        option = 100
+        
     if option == 1:
         StartGameFunc()
     elif option == 2:
