@@ -23,7 +23,7 @@
 # 0. Exit to main menu
 
 # Imports
-import ast 
+import ast
 
 # for mapping locations to buildings
 plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
@@ -127,7 +127,7 @@ def LoadGameFunc():
         data = f.read()
     loadedPlots = ast.literal_eval(data)
     print(plots)
-    
+
     with open("buildingCount.txt") as file:
         dataBuild = file.read()
     loadedBuildings = ast.literal_eval(dataBuild)
