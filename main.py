@@ -32,7 +32,12 @@ def ControlFlow():
 
 def MainGame():
     FirstMenu()
-    option = (int)(input("Your choice? "))
+
+    try:
+        option = (int)(input("Your choice? "))
+    except ValueError:
+        option = 100
+
     if option == 1:
         StartGameFunc()
     elif option == 2:
@@ -42,7 +47,7 @@ def MainGame():
     else:
         print("invalid option, try again")
 
-        
+
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
