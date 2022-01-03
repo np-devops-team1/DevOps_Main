@@ -30,6 +30,7 @@ plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
          "B2": "\t", "B3": "\t", "B4": "\t", "C1": "\t", "C2": "\t",
          "C3": "\t", "C4": "\t", "D1": "\t", "D2": "\t", "D3": "\t",
          "D4": "\t", "Turn": "0", "lastPlace": ""}
+
 locationDic = {"A1": ["A2", "B1"],
                "A2": ["A1", "A3", "B2"],
                "A3": ["A2", "A4", "B3"],
@@ -123,8 +124,8 @@ def FirstMenu():
 
 
 def printGameMenuFunc(buildingOne, buildingTwo):
-    print("1- Build a ", buildingOne)
-    print("2- Build a ", buildingTwo)
+    print("1- Build a ", buildings[buildingOne])
+    print("2- Build a ", buildings[buildingTwo])
     print("3- See remaining buildings ")
     print("4- See current score ")
     print("5- Save game ")
@@ -144,14 +145,15 @@ def buildBuilding(option, plots, position):
     if (int)(plots["Turn"]) != 1:
         placeList = CheckAdjacency(plots["lastPlace"])
         if position not in placeList:
-            print("building not adjacent")
-            return False
+            print("You must build next to an existing building.")
+            return plots
+
     plots[position] = buildings[option]
     SubtractBuildingCount(option)
     plots["lastPlace"] = position
     plots["Turn"] = (int)(plots["Turn"]) + 1
     CityMapFunc()
-    return True
+    return plots
 
 
 def SaveGameFunc():
@@ -163,29 +165,34 @@ def ScoreAdjacentBuildings():
 
 
 def StartGameFunc():
-    CityMapFunc()
+    global plots
     plots["Turn"] = (int)(plots["Turn"]) + 1
 
     # When turn is not 16
     while (int)(plots["Turn"]) <= 16:
         print("Turn: ", plots["Turn"])
-        position = input("Build where?")
-        print(plots)
-
         CityMapFunc()
-        optionOne = buildings[randomOptionsFunc()]
-        optionTwo = buildings[randomOptionsFunc()]
+        optionOne = randomOptionsFunc()
+        optionTwo = randomOptionsFunc()
         printGameMenuFunc(optionOne, optionTwo)
 
         choice = (int)(input("Your choice?"))
 
+        position = input("Build where?")
+
+        if position not in plots.keys():
+            print("Invalid Position\n")
+            continue
+
+        if plots[position] != "\t":
+            print("Plot is occupied\n")
+            continue
+
         if choice == 1:
-            if buildBuilding(optionOne, plots, position) is False:
-                continue
+            plots = buildBuilding(optionOne, plots, position)
 
         elif choice == 2:
-            if buildBuilding(optionTwo, plots, position) is False:
-                continue
+            plots = buildBuilding(optionOne, plots, position)
 
         elif choice == 3:
             printRemainingBuildings()
@@ -206,3 +213,6 @@ def StartGameFunc():
 
 def LoadGameFunc():
     print("load")
+
+
+ControlFlow()
