@@ -35,9 +35,9 @@ def MainGame():
 
     try:
         option = (int)(input("Your choice? "))
-    except:
+    except ValueError:
         option = 100
-        
+
     if option == 1:
         StartGameFunc()
     elif option == 2:
@@ -47,7 +47,7 @@ def MainGame():
     else:
         print("invalid option, try again")
 
-        
+
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
