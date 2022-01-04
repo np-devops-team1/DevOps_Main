@@ -23,6 +23,7 @@
 # 0. Exit to main menu
 
 # Imports
+import ast
 
 # for mapping locations to buildings
 plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
@@ -46,11 +47,7 @@ locationDic = {"A1": ["A2", "B1"],
                "D3": ["D2", "D4", "C3"],
                "D4": ["D3", "C4"]}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
-bchCount = 8
-facCount = 8
-hseCount = 8
-shpCount = 8
-hwyCount = 8
+buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
 lastPlace = ""  # stores last plot built upon
 
 
@@ -92,7 +89,10 @@ def MainGame():
     if option == 1:
         StartGameFunc()
     elif option == 2:
-        LoadGameFunc()
+        plots, buildings, loaded = LoadGameFunc()
+        if loaded is True:
+            StartGameFunc()
+
     elif option == 0:
         exit(0)
     else:
@@ -120,4 +120,22 @@ def StartGameFunc():
 
 
 def LoadGameFunc():
-    print("load")
+    try:
+        with open("dict.txt") as f:
+            data = f.read()
+        loadedPlots = ast.literal_eval(data)
+        print(plots)
+
+        with open("buildingCount.txt") as file:
+            dataBuild = file.read()
+        loadedBuildings = ast.literal_eval(dataBuild)
+        return loadedPlots, loadedBuildings, True
+    except FileNotFoundError:
+        print("File is not found")
+        return plots, buildCount, False
+    except ValueError:
+        print("Loaded Data is incorrect")
+        return plots, buildCount, False
+    except SyntaxError:
+        print("Loaded Data is incorrect")
+        return plots, buildCount, False
