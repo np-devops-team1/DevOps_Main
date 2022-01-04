@@ -109,7 +109,7 @@ def randomOptionsFunc():
 
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
-    if(loc in locationDic.keys()):
+    if loc in locationDic.keys():
         return locationDic.get(loc)
     else:
         raise ValueError('Unexpected location')
@@ -141,8 +141,19 @@ def printRemainingBuildings():
     print("Highway : ", buildCount["HWY"])
 
 
-def buildBuilding(option, plots, position):
-    if (int)(plots["Turn"]) != 1:
+def buildBuilding(option, plots):
+
+    position = input("Build where?")
+
+    if position not in plots.keys():
+        print("Invalid Position\n")
+        return False
+
+    if plots[position] != "\t":
+        print("Plot is occupied\n")
+        return False
+
+    if (int)(plots["Turn"]) != 0:
         placeList = CheckAdjacency(plots["lastPlace"])
         if position not in placeList:
             print("You must build next to an existing building.")
@@ -178,21 +189,11 @@ def StartGameFunc():
 
         choice = (int)(input("Your choice?"))
 
-        position = input("Build where?")
-
-        if position not in plots.keys():
-            print("Invalid Position\n")
-            continue
-
-        if plots[position] != "\t":
-            print("Plot is occupied\n")
-            continue
-
         if choice == 1:
-            plots = buildBuilding(optionOne, plots, position)
+            result = buildBuilding(optionOne, plots)
 
         elif choice == 2:
-            plots = buildBuilding(optionOne, plots, position)
+            result = buildBuilding(optionOne, plots)
 
         elif choice == 3:
             printRemainingBuildings()
@@ -207,6 +208,11 @@ def StartGameFunc():
         elif choice == 0:
             FirstMenu()
             break
+
+        if result is False:
+            continue
+        
+        plots = result
     print("----------------------------------")
     ScoreAdjacentBuildings(plots)
 
@@ -214,5 +220,5 @@ def StartGameFunc():
 def LoadGameFunc():
     print("load")
 
-
-ControlFlow()
+def __init__():
+    ControlFlow()
