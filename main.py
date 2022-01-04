@@ -216,7 +216,7 @@ def StartGameFunc():
 
         if result is False:
             continue
-        
+
         plots = result
     print("----------------------------------")
     ScoreAdjacentBuildings(plots)
@@ -224,6 +224,7 @@ def StartGameFunc():
 
 def LoadGameFunc():
     print("load")
+
 
 def __init__():
     ControlFlow()
