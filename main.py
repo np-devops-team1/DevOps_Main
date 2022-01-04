@@ -228,6 +228,3 @@ def LoadGameFunc():
 
 def __init__():
     ControlFlow()
-
-
-ControlFlow()
