@@ -161,7 +161,7 @@ def buildBuilding(option, plots):
         placeList = CheckAdjacency(plots["lastPlace"])
         if position not in placeList:
             print("You must build next to an existing building.")
-            return plots
+            return False
 
     plots[position] = buildings[option]
     SubtractBuildingCount(option)
