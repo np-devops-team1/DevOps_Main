@@ -32,14 +32,8 @@ jobs:
       - name: Begin Pytest
         run: python -m pytest --junit-xml=report.xml
 
-      - name: "Publish Unit Tests Results"
+      - name: "Publish Test Report"
         uses: EnricoMi/publish-unit-test-result-action@v1.25
-        if: always()
-        with:
-          files: report.xml
-
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.24
         if: always()
         with:
           files: report.xml
