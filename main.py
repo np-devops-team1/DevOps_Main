@@ -94,7 +94,10 @@ def MainGame():
         StartGameFunc()
     elif option == 2:
         plots, buildings = LoadGameFunc()
-        StartGameFunc()
+        if plots == False:
+            print("File Does Not Exist")
+        else:
+            StartGameFunc()
 
     elif option == 0:
         exit(0)
@@ -123,12 +126,16 @@ def StartGameFunc():
 
 
 def LoadGameFunc():
-    with open("dict.txt") as f:
-        data = f.read()
-    loadedPlots = ast.literal_eval(data)
-    print(plots)
 
-    with open("buildingCount.txt") as file:
-        dataBuild = file.read()
-    loadedBuildings = ast.literal_eval(dataBuild)
-    return loadedPlots, loadedBuildings
+    try:
+        with open("dict.txt") as f:
+            data = f.read()
+        loadedPlots = ast.literal_eval(data)
+        print(plots)
+
+        with open("buildingCount.txt") as file:
+            dataBuild = file.read()
+        loadedBuildings = ast.literal_eval(dataBuild)
+        return loadedPlots, loadedBuildings
+    except FileNotFoundError:
+        return False, False
