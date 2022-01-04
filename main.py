@@ -111,10 +111,9 @@ def randomOptionsFunc():
         if buildCount[buildings[numberOne]] != 0:
             return numberOne
 
-
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
-    if loc in locationDic.keys():
+    if(loc in locationDic.keys()):
         return locationDic.get(loc)
     else:
         raise ValueError('Unexpected location')
