@@ -63,21 +63,21 @@ def SubtractBuildingCount(number):
 def CityMapFunc():
     print("\t     A \t     B \t     C \t     D")
     for i in range(4):
-        print("\t   --------------------------------")
+        print("\t   +------------------------------+")
         if i == 0:
             print("\t", i + 1, "| ", plots["A1"], " | ", plots["B1"],
-                  " | ", plots["C1"], " |", plots["D1"], "  | ")
+                  " | ", plots["C1"], " | ", plots["D1"], " | ")
         if i == 1:
             print("\t", i + 1, "| ", plots["A2"], " | ", plots["B2"],
-                  " | ", plots["C2"], " |", plots["D2"], "  | ")
+                  " | ", plots["C2"], " | ", plots["D2"], " | ")
         if i == 2:
             print("\t", i + 1, "| ", plots["A3"], " | ", plots["B3"],
-                  " | ", plots["C3"], " |", plots["D3"], "  | ")
+                  " | ", plots["C3"], " | ", plots["D3"], " | ")
         if i == 3:
             print("\t", i + 1, "| ", plots["A4"], " | ", plots["B4"],
-                  " | ", plots["C4"], " |", plots["D4"], "  | ")
+                  " | ", plots["C4"], " | ", plots["D4"], " | ")
 
-    print("\t   --------------------------------")
+    print("\t   +------------------------------+")
 
 
 # function for main menu
