@@ -47,11 +47,7 @@ locationDic = {"A1": ["A2", "B1"],
                "D3": ["D2", "D4", "C3"],
                "D4": ["D3", "C4"]}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
-bchCount = 8
-facCount = 8
-hseCount = 8
-shpCount = 8
-hwyCount = 8
+buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
 lastPlace = ""  # stores last plot built upon
 
 
