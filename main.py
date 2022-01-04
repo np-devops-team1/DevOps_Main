@@ -146,7 +146,7 @@ def ScoreAdjacentBuildings():
     print("score")
 
 
-def StartGameFunc():  # noqa: C901
+def StartGameFunc():
     global plots
     plots["Turn"] = (int)(plots["Turn"]) + 1
 
