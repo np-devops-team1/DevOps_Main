@@ -47,6 +47,7 @@ locationDic = {"A1": ["A2", "B1"],
                "D4": ["D3", "C4"]}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
 hseScoreDic = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1}
+houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis = []
 
 bchCount = 8
 facCount = 8
@@ -108,22 +109,23 @@ def calculateBCHscore(place):
     row = placeSplit[0]
     col = placeSplit[1]
     if (row == "A" or row == "D") and int(col) < 5:
-        print("Beach score + 3")
         return 3
     else:
-        print("Beach score + 1")
         return 1
 
 
 # calculate factory score
 def calculateFACscore(factoryNumber):
+
     if (isinstance(factoryNumber, int)):
         if factoryNumber < 5:
-            print("Factory score + " + factoryNumber)
-            return factoryNumber
+            factoryScoreHis = [factoryNumber for i in range(factoryNumber)]
+            return factoryNumber * factoryNumber
         else:
-            print("Factory score + 1")
-            return 1
+            factoryNumber = factoryNumber - 4
+            factoryScoreHis = [4 for i in range(4)]
+            factoryScoreHis.append([1 for i in range(factoryNumber)])
+            return factoryNumber
     else:
         raise TypeError('Invalid Data Type')
 
@@ -140,25 +142,21 @@ def calculateSHPscore(adjacencylist, plots):
             if fcount == 1:
                 break
             shopScore = shopScore + 1
-            print("Shop Score + 1")
             fcount = fcount + 1
         elif plots[item] == "BCH":
             if bcount == 1:
                 break
             shopScore = shopScore + 2
-            print("Shop Score + 2")
             bcount = bcount + 1
         elif plots[item] == "HSE":
             if hcount == 1:
                 break
             shopScore = shopScore + 1
-            print("Shop Score + 1")
             hcount = hcount + 1
         elif plots[item] == "SHP":
             if scount == 1:
                 break
             shopScore = shopScore + 1
-            print("Shop Score + 1")
             scount = scount + 1
     return shopScore
 
@@ -178,36 +176,53 @@ def calculateHWYscore(adjacencylist, plots):
     return 0
 
 
+def printScoreHis(history):
+    for i in range(len(history)):
+        print(history[i], end=" ")
+        if(i != len(history)):
+            print("+", end=" ")
+
+
 # function incorportes scoring logic for all types of buildings
 def ScoreAdjacentBuildings(plots):
     TLScore, houseScore, beachScore, factoryScore, shopScore, highwayScore = 0
+    houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis = []
+
     factoryNumber = 0
 
     for place, build in plots.items():
         if build == "BCH":
-            beachScore = beachScore + calculateBCHscore(place)
-        print("Beach score : ", beachScore)
+            score = calculateBCHscore(place)
+            beachScore = beachScore + score
+            beachHis.append(score)
 
         if build == "FAC":
             factoryNumber = factoryNumber + 1
-            factoryScore = factoryScore + calculateFACscore(factoryNumber)
-        print("Factory score : ", factoryScore)
-
         if build == "HSE":
             adjacencylist = CheckAdjacency(place)
             for item in adjacencylist:
-                houseScore = + calculateHSEscore(plots, item)
-        print("House score : ", houseScore)
+                score = calculateHSEscore(plots, item)
+                houseScore = houseScore + score
+                houseHis.append(score)
 
         if build == "SHP":
             adjacencylist = CheckAdjacency(place)
-            shopScore = calculateSHPscore(adjacencylist, plots)
-        print("Shop score : ", shopScore)
-
+            score = calculateSHPscore(adjacencylist, plots)
+            shopScore = shopScore + score
+            shopScoreHis.append(score)
         if build == "HWY":
             adjacencylist = CheckAdjacency(place)
-            highwayScore = + calculateHWYscore(adjacencylist, plots)
-        print("Highway score : ", highwayScore)
+            score = calculateHWYscore(adjacencylist, plots)
+            highwayScore = highwayScore + score
+            highwayScoreHis.append(score)
+
+    factoryScore = calculateFACscore(factoryNumber)
+
+    print("BCH : ", printScoreHis(beachHis) + " = " + beachScore)
+    print("FAC : ", printScoreHis(factoryScoreHis) + " = " + factoryScore)
+    print("HSE : ", printScoreHis(houseHis) + " = " + houseScore)
+    print("SHP : ", printScoreHis(shopScoreHis) + " = " + shopScore)
+    print("HWY : ", printScoreHis(highwayScoreHis) + " = " + highwayScore)
 
     TLScore = beachScore + factoryScore + houseScore + shopScore + highwayScore
     print("Total Score = ", TLScore)
@@ -219,7 +234,6 @@ def FirstMenu():
     print("1- Start new game")
     print("2- Load saved game")
     print("0- Exit")
-
 
 
 def StartGameFunc():
