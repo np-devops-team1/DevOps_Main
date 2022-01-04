@@ -129,12 +129,12 @@ def FirstMenu():
 
 
 def printGameMenuFunc(buildingOne, buildingTwo):
-    print("1- Build a ", buildings[buildingOne])
-    print("2- Build a ", buildings[buildingTwo])
-    print("3- See remaining buildings ")
-    print("4- See current score ")
-    print("5- Save game ")
-    print("0- Exit to main menu ")
+    print("1. Build a", buildings[buildingOne])
+    print("2. Build a", buildings[buildingTwo])
+    print("3. See remaining buildings ")
+    print("4. See current score ")
+    print("5. Save game ")
+    print("0. Exit to main menu ")
 
 
 def printRemainingBuildings():
