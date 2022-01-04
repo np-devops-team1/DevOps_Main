@@ -52,13 +52,6 @@ buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
 lastPlace = ""  # stores last plot built upon
 
 
-# module reduces the amount of buildings available after use
-def SubtractBuildingCount(number):
-    global buildCount
-    building = buildings[number]
-    buildCount[building] = buildCount[building] - 1
-
-
 # module displays game/city grid
 def CityMapFunc():
     print("\t     A \t     B \t     C \t     D")
@@ -138,12 +131,7 @@ def printGameMenuFunc(buildingOne, buildingTwo):
 
 
 def printRemainingBuildings():
-    print("--- Remaining Buildings ---")
-    print("Beach : ", buildCount["BCH"])
-    print("Factory : ", buildCount["FAC"])
-    print("House : ", buildCount["HSE"])
-    print("Shop : ", buildCount["SHP"])
-    print("Highway : ", buildCount["HWY"])
+    print("remainingbuilding")
 
 
 def buildBuilding(option, plots):
@@ -158,19 +146,27 @@ def ScoreAdjacentBuildings():
     print("score")
 
 
-def StartGameFunc():
+def StartGameFunc():  # noqa: C901
     global plots
     plots["Turn"] = (int)(plots["Turn"]) + 1
 
+    correctInput = True
     # When turn is not 16
     while (int)(plots["Turn"]) <= 16:
         print("Turn: ", plots["Turn"])
         CityMapFunc()
-        optionOne = randomOptionsFunc()
-        optionTwo = randomOptionsFunc()
+        # To ensure no re-running of random code for invalid inputs
+        if correctInput:
+            optionOne = randomOptionsFunc()
+            optionTwo = randomOptionsFunc()
+
+        correctInput = True
         printGameMenuFunc(optionOne, optionTwo)
 
-        choice = (int)(input("Your choice?"))
+        try:
+            choice = (int)(input("Your choice? "))
+        except ValueError:
+            choice = 100
 
         if choice == 1:
             result = buildBuilding(optionOne, plots)
@@ -189,15 +185,17 @@ def StartGameFunc():
             FirstMenu()
             break
         elif choice == 0:
-            FirstMenu()
+            MainGame()
             break
-
+        else:
+            print("invalid option, try again")
+            correctInput = False
+            continue
         if result is False:
             continue
 
-        plots = result
+        # plots = result
     print("----------------------------------")
-    ScoreAdjacentBuildings(plots)
 
 
 def LoadGameFunc():
