@@ -90,7 +90,7 @@ def MainGame():
         StartGameFunc()
     elif option == 2:
         plots, buildings, loaded = LoadGameFunc()
-        if loaded == True:
+        if loaded is True:
             StartGameFunc()
 
     elif option == 0:
