@@ -1,0 +1,39 @@
+name: CI for QA Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Pytest
+        run: |
+          pip install pytest
+
+      - name: Checkout Own Repo
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_Main
+
+      - name: Checkout Test Script
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_QA
+          path: tests
+          token: ${{ secrets.QA_REMOTE }}
+
+      - name: Begin Pytest
+        run: python -m pytest --junit-xml=report.xml
+
+      - name: Publish Test Report
+        uses: EnricoMi/publish-unit-test-result-action@v1.25
+        if: always()
+        with:
+          files: report.xml
