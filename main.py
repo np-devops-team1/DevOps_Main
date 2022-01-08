@@ -119,6 +119,18 @@ def StartGameFunc():
     print("start")
 
 
+# module saves game data to txt file
+def SaveGameFunc():
+    f = open("dict.txt", "w")
+    f.write(str(plots))
+    f.close()
+    f2 = open("buildingCount.txt", "w")
+    bcount = buildCount
+    f2.write(str(bcount))
+    f2.close()
+    print("Game Saved!")
+
+
 def LoadGameFunc():
     try:
         with open("dict.txt") as f:
