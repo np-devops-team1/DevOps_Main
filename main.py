@@ -108,7 +108,10 @@ def calculateBCHscore(place):
     placeSplit = list(place)
     row = placeSplit[0]
     col = placeSplit[1]
-    if (row == "A" or row == "D") and int(col) < 5:
+    rowLeft = list(plots.keys())[0][0]
+    rowRight = list(plots.keys())[-3][0]
+
+    if (row == rowLeft or row == rowRight):
         return 3
     else:
         return 1
