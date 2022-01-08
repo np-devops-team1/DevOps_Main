@@ -2,7 +2,7 @@ name: CI for UnitTest
 
 on:
   push:
-    branches: [main]
+    branches: [push, pull_request]
     
 jobs:
   build:
@@ -27,6 +27,10 @@ jobs:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases
         token: ${{ secrets.DEV_REMOTE }}
+
+    - name: Analysing code with flake8
+      run: |
+        flake8
         
     - name: Begin Pytest
       run: |
