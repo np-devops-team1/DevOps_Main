@@ -47,7 +47,11 @@ locationDic = {"A1": ["A2", "B1"],
                "D4": ["D3", "C4"]}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
 hseScoreDic = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1}
-houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis = []
+houseHis = [] 
+beachHis= []
+factoryScoreHis = [] 
+shopScoreHis = [] 
+highwayScoreHis = []
 
 bchCount = 8
 facCount = 8
@@ -189,7 +193,7 @@ def printScoreHis(history):
 # function incorportes scoring logic for all types of buildings
 def ScoreAdjacentBuildings(plots):
     TLScore, houseScore, beachScore, factoryScore, shopScore, highwayScore = 0
-    houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis = []
+    global houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis
 
     factoryNumber = 0
 
