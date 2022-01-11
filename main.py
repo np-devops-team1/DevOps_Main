@@ -23,6 +23,7 @@
 # 0. Exit to main menu
 
 # Imports
+import ast
 
 # for mapping locations to buildings
 plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
@@ -53,11 +54,7 @@ factoryScoreHis = []
 shopScoreHis = [] 
 highwayScoreHis = []
 
-bchCount = 8
-facCount = 8
-hseCount = 8
-shpCount = 8
-hwyCount = 8
+buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
 lastPlace = ""  # stores last plot built upon
 
 
@@ -82,16 +79,26 @@ def CityMapFunc():
     print("\t   --------------------------------")
 
 
-# function for main menu
-def MenuSelection(option):
+def ControlFlow():
+    while True:
+        MainGame()
 
+
+def MainGame():
     FirstMenu()
-    option = (int)(input("Your choice? "))
-    MenuSelection(option)
+
+    try:
+        option = (int)(input("Your choice? "))
+    except ValueError:
+        option = 100
+
     if option == 1:
         StartGameFunc()
     elif option == 2:
-        LoadGameFunc()
+        plots, buildings, loaded = LoadGameFunc()
+        if loaded is True:
+            StartGameFunc()
+
     elif option == 0:
         exit(0)
     else:
@@ -238,9 +245,10 @@ def ScoreAdjacentBuildings(plots):
 def FirstMenu():
     print("Welcome, mayor of Simp City!")
     print("------------------------------")
-    print("1- Start new game")
-    print("2- Load saved game")
-    print("0- Exit")
+
+    print("1. Start new game")
+    print("2. Load saved game")
+    print("0. Exit")
 
 
 def StartGameFunc():
@@ -248,4 +256,22 @@ def StartGameFunc():
 
 
 def LoadGameFunc():
-    print("load")
+    try:
+        with open("dict.txt") as f:
+            data = f.read()
+        loadedPlots = ast.literal_eval(data)
+        print(plots)
+
+        with open("buildingCount.txt") as file:
+            dataBuild = file.read()
+        loadedBuildings = ast.literal_eval(dataBuild)
+        return loadedPlots, loadedBuildings, True
+    except FileNotFoundError:
+        print("File is not found")
+        return plots, buildCount, False
+    except ValueError:
+        print("Loaded Data is incorrect")
+        return plots, buildCount, False
+    except SyntaxError:
+        print("Loaded Data is incorrect")
+        return plots, buildCount, False

@@ -5,4 +5,4 @@ exclude =
     .github,
     __pycache__,
     dev_env
-max-complexity = 10
+max-complexity = 15
