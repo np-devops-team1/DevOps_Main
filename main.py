@@ -78,6 +78,32 @@ def ControlFlow():
         MainGame()
 
 
+def buildBuilding(option, plots):
+
+    position = input("Build where?")
+
+    if position not in plots.keys():
+        print("Invalid Position\n")
+        return False
+
+    if plots[position] != "\t":
+        print("Plot is occupied\n")
+        return False
+
+    if (int)(plots["Turn"]) != 0:
+        placeList = CheckAdjacency(plots["lastPlace"])
+        if position not in placeList:
+            print("You must build next to an existing building.")
+            return False
+
+    plots[position] = buildings[option]
+    SubtractBuildingCount(option)
+    plots["lastPlace"] = position
+    plots["Turn"] = (int)(plots["Turn"]) + 1
+    CityMapFunc()
+    return plots
+
+
 def MainGame():
     FirstMenu()
 
