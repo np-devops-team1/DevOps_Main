@@ -1,0 +1,36 @@
+name: Deployment
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  deploy:
+    name: Prepare for Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+
+      - name: Pre-Compile Setup
+        run: |
+          pip install pyinstaller==3.6
+          python -m PyInstaller --onefile main.py
+          mkdir src
+          mv main.py main.spec requirements.txt -t ./src
+
+      - name: Compile into Executable
+        uses: JackMcKew/pyinstaller-action-windows@main
+        with:
+          path: src
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: SimpCity
+          path: src/dist/windows/main.exe
