@@ -86,7 +86,7 @@ jobs:
       - name: Send to SeriesCI
         run: |
           curl \
-            --header "Authorization: Token 43b03118-b044-4db1-822d-1b8d38fa7aca" \
+            --header "Authorization: Token 85ae054e-bdc4-4107-824c-fab6a847aeff" \
             --header "Content-Type: application/json" \
             --data "{
               \"values\":[
