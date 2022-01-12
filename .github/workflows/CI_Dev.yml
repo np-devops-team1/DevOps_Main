@@ -25,7 +25,14 @@ jobs:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases
         token: ${{ secrets.DEV_REMOTE }}
+        
+    - name: Get Branch Name
+      id: vars
+      run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
+    - name: Check branch name
+      run: echo $ {{ (split "/" steps.vars.outputs.short_ref)._1 }}
+ 
     - name: Analysing code with flake8
       run: |
         flake8
