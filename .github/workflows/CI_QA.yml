@@ -29,7 +29,9 @@ jobs:
           token: ${{ secrets.QA_REMOTE }}
 
       - name: Begin Pytest
-        run: python -m pytest --junit-xml=report.xml
+        run: |
+          mv ./tests/*.* ./
+          python -m pytest --junit-xml=report.xml
       
       - name: Upload Unit Test Results
         if: always()
