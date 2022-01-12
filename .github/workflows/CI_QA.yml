@@ -77,6 +77,13 @@ jobs:
           echo "PASSED=$passed" >> $GITHUB_ENV
           echo "EXECUTED=$executed" >> $GITHUB_ENV
           
+          echo "Total: ${total}"
+          echo "Skipped: ${skipped}"
+          echo "Failed: ${failed}"
+          echo "Error: ${error}"
+          echo "Passed: ${passed}"
+          echo "Executed: "${executed}"
+          
       - name: Send to SeriesCI
         run: |
           curl \
