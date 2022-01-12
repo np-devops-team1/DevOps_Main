@@ -26,13 +26,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: np-devops-team1/DevOps_QA
-          path: tests
           token: ${{ secrets.QA_REMOTE }}
 
       - name: Begin Pytest
         run: |
-          mv ./tests/*.* ./
-          python -m pytest --junit-xml=report.xml
+          python -m pytest --junit-xml report.xml
       
       - name: Upload Unit Test Results
         if: always()
