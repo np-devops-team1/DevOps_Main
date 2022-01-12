@@ -30,7 +30,12 @@ jobs:
       run: |
         flake8
         
-    - name: Begin Pytest
+    - name: Build coverage file
       run: |
         mv ./test_cases/*.* ./
-        coverage run -m pytest
+        pytest --cache-clear --cov=app test/ > pytest-coverage.txt
+        
+    - name: Comment coverage
+      uses: coroo/pytest-coverage-commentator@v1.0.2
+      with:
+        pytest-coverage: pytest-coverage.txt
