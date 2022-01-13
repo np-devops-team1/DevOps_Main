@@ -38,8 +38,8 @@ jobs:
 
         echo "$tag_branch"
         echo "$name_branch"
-        echo ${{TAG_BRANCH}}
-        echo ${{NAME_BRANCH}}
+        echo $TAG_BRANCH
+        echo $NAME_BRANCH
 
     - name: Analysing code with flake8
       run: |
