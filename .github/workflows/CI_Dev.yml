@@ -46,7 +46,7 @@ jobs:
         flake8
         
     - name: Checkout Test Script
-      if: ${{tag_branch == 'feat' }}
+      if: ${{tag_branch == 'ci' }}
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
