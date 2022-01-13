@@ -33,23 +33,23 @@ jobs:
     - name: Check branch name
       run: |
 
-        tag="$(cut -d'/' -f1 <<< steps.vars.outputs.short_ref)"
-        name="$(cut -d'/' -f2 <<< steps.vars.outputs.short_ref)"
+        tag_branch="$(cut -d'/' -f1 <<< steps.vars.outputs.short_ref)"
+        name_branch="$(cut -d'/' -f2 <<< steps.vars.outputs.short_ref)"
 
-        echo "TAG=$tag" >> $GITHUB_ENV
-        echo "NAME=$name" >> $GITHUB_ENV
+        echo "TAG_BRANCH=$tag_branch" >> $GITHUB_ENV
+        echo "NAME_BRANCH=$name_branch" >> $GITHUB_ENV
         
-        echo $${{tag}}
-        echo $${{name}}
-        echo $${{env.TAG}}
-        echo $${{env.NAME}}
+        echo $${{tag_branch}}
+        echo $${{name_branch}}
+        echo $${{env.TAG_BRANCH}}
+        echo $${{env.NAME_BRANCH}}
 
     - name: Analysing code with flake8
       run: |
         flake8
         
     - name: Checkout Test Script
-      if: ${{ env.TAG == 'ci' }}
+      if: ${{ env.TAG_BRANCH == 'ci' }}
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -57,13 +57,13 @@ jobs:
         token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
-      if: ${{ env.TAG == 'feat' }}
+      if: ${{ env.TAG_BRANCH == 'feat' }}
       run: |
         mv ./test_cases/test_${{env.NAME}} ./
         pytest --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
-      if: ${{ env.TAG == 'feat' }}
+      if: ${{ env.TAG_BRANCH == 'feat' }}
       uses: coroo/pytest-coverage-commentator@v1.0.2
       with:
         pytest-coverage: pytest-coverage.txt
