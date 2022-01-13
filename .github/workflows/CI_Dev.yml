@@ -32,8 +32,9 @@ jobs:
 
     - name: Check branch name
       run: |
-        tag = $ {{ (split "/" steps.vars.outputs.short_ref)._0 }}
-        name = $ {{ (split "/" steps.vars.outputs.short_ref)._1 }}
+
+        tag = "$(cut -d'/' -f1 <<< steps.vars.outputs.short_ref)"
+        name = "$(cut -d'/' -f2 <<< steps.vars.outputs.short_ref)"
 
         echo "TAG=$tag" >> $GITHUB_ENV
         echo "NAME=$name" >> $GITHUB_ENV
