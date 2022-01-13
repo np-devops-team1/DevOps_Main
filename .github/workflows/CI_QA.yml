@@ -30,7 +30,7 @@ jobs:
           token: ${{ secrets.QA_REMOTE }}
 
       - name: Begin Pytest
-        run: python -m pytest --junit-xml report.xml
+        run: python -m pytest --junit-xml=report.xml
 
       - name: Upload Unit Test Results
         if: always()
@@ -52,7 +52,7 @@ jobs:
           path: artifacts
 
       - name: Publish Test Report
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v1.25
         with:
           files: artifacts/**/*.xml
           
