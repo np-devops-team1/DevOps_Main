@@ -32,8 +32,81 @@ jobs:
       - name: Begin Pytest
         run: python -m pytest --junit-xml=report.xml
 
+      - name: Upload Unit Test Results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: results
+          path: report.xml
+          
+  publish-test-results:
+    name: Publish Test Results
+    runs-on: ubuntu-latest
+    needs: build-test
+    if: always()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: results
+          path: artifacts
+
       - name: Publish Test Report
         uses: EnricoMi/publish-unit-test-result-action@v1.25
-        if: always()
         with:
-          files: report.xml
+          files: artifacts/**/*.xml
+          
+      - name: Install xmllint
+        run: |
+          sudo apt-get install -y libxml2-utils
+        
+      - name: Save XML Attributes
+        run: |
+          total=$(xmllint --xpath "string(//*[local-name()='testsuite']/@tests)" artifacts/report.xml)
+          skipped=$(xmllint --xpath "string(//*[local-name()='testsuite']/@skipped)" artifacts/report.xml)
+          failed=$(xmllint --xpath "string(//*[local-name()='testsuite']/@failures)" artifacts/report.xml)
+          error=$(xmllint --xpath "string(//*[local-name()='testsuite']/@errors)" artifacts/report.xml)
+          passed=$((total-skipped-failed-error))
+          executed=$((total-skipped))
+          
+          echo "TOTAL=$total" >> $GITHUB_ENV
+          echo "SKIPPED=$skipped" >> $GITHUB_ENV
+          echo "FAILED=$failed" >> $GITHUB_ENV
+          echo "ERROR=$error" >> $GITHUB_ENV
+          echo "PASSED=$passed" >> $GITHUB_ENV
+          echo "EXECUTED=$executed" >> $GITHUB_ENV
+          
+          echo "Total: ${total}"
+          echo "Skipped: ${skipped}"
+          echo "Failed: ${failed}"
+          echo "Error: ${error}"
+          echo "Passed: ${passed}"
+          echo "Executed: ${executed}"
+          
+      - name: Send to SeriesCI
+        run: |
+          curl \
+            --header "Authorization: Token 85ae054e-bdc4-4107-824c-fab6a847aeff" \
+            --header "Content-Type: application/json" \
+            --data "{
+              \"values\":[
+                {
+                  \"line\":\"Total Test Cases\",
+                  \"value\":\"${{env.TOTAL}} %\"
+                },
+                {
+                  \"line\":\"Passed\",
+                  \"value\":\"${{env.PASSED}} %\"
+                },
+                {
+                  \"line\":\"Failed\",
+                  \"value\":\"${{env.FAILED}} %\"
+                },
+                {
+                  \"line\":\"Executed\",
+                  \"value\":\"${{env.EXECUTED}} %\"
+                }
+              ],
+              \"sha\":\"${GITHUB_SHA}\"
+            }" \
+            https://seriesci.com/api/np-devops-team1/DevOps_Main/:series/many
