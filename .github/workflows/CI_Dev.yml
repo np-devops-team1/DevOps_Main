@@ -33,8 +33,8 @@ jobs:
     - name: Check branch name
       run: |
 
-        tag = "$(cut -d'/' -f1 <<< steps.vars.outputs.short_ref)"
-        name = "$(cut -d'/' -f2 <<< steps.vars.outputs.short_ref)"
+        tag="$(cut -d'/' -f1 <<< steps.vars.outputs.short_ref)"
+        name="$(cut -d'/' -f2 <<< steps.vars.outputs.short_ref)"
 
         echo "TAG=$tag" >> $GITHUB_ENV
         echo "NAME=$name" >> $GITHUB_ENV
