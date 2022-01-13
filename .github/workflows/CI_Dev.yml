@@ -33,16 +33,16 @@ jobs:
     - name: Check branch name
       run: |
 
-        tag_branch="$(cut -d'/' -f1 <<< 'feat/hello')"
-        name_branch="$(cut -d'/' -f2 <<< 'feat/hello')"
+        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF##*/})"
+        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF##*/})"
 
         echo "TAG_BRANCH=$tag_branch" >> $GITHUB_ENV
         echo "NAME_BRANCH=$name_branch" >> $GITHUB_ENV
         
         echo "$tag_branch"
         echo "$name_branch"
-        echo "$env.TAG_BRANCH"
-        echo "$env.NAME_BRANCH"
+        echo "${{env.TAG_BRANCH}}"
+        echo "${{env.NAME_BRANCH}}"
 
     - name: Analysing code with flake8
       run: |
