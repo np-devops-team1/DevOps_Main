@@ -25,16 +25,12 @@ jobs:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases
         token: ${{ secrets.DEV_REMOTE }}
-        
-    - name: Get Branch Name
-      id: vars
-      run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
     - name: Check branch name
       run: |
 
-        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF##*/})"
-        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF##*/})"
+        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF##*})"
+        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF##*})"
 
         echo "TAG_BRANCH=$tag_branch" >> $GITHUB_ENV
         echo "NAME_BRANCH=$name_branch" >> $GITHUB_ENV
