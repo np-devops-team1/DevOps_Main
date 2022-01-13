@@ -4,6 +4,7 @@ on: [push, pull_request]
     
 jobs:
   build:
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-python@v2
@@ -20,33 +21,19 @@ jobs:
         repository: np-devops-team1/DevOps_Main
         
     - name: Checkout Test Script
+      if: startsWith(github.ref, 'refs/heads/feat/')
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases
         token: ${{ secrets.DEV_REMOTE }}
 
-    - name: Check branch name
-      run: |
-
-        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF#refs/heads/})"
-        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
-        
-        echo "${GITHUB_REF}"
-        echo "NAME_BRANCH=$(echo $name_branch)" >> $GITHUB_ENV
-        echo "TAG_BRANCH=$(echo $tag_branch)" >> $GITHUB_ENV
-
-        echo "$tag_branch"
-        echo "$name_branch"
-        echo $TAG_BRANCH
-        echo $NAME_BRANCH
-
     - name: Analysing code with flake8
       run: |
         flake8
         
     - name: Checkout Test Script
-      if: ${{tag_branch == 'ci' }}
+      if: startsWith(github.ref, 'refs/heads/feat/')
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -54,13 +41,14 @@ jobs:
         token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
-      if: ${{tag_branch == 'feat' }}
+      if: startsWith(github.ref, 'refs/heads/feat/')
       run: |
-        mv ./test_cases/test_${{NAME}} ./
-        pytest --cache-clear --cov=app test/ > pytest-coverage.txt
+        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
+        mv ./test_cases/test_'$name_branch'.py ./
+        pytest test_'$name_branch'.py --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
-      if: ${{tag_branch == 'feat' }}
+      if: startsWith(github.ref, 'refs/heads/feat/')
       uses: coroo/pytest-coverage-commentator@v1.0.2
       with:
         pytest-coverage: pytest-coverage.txt
