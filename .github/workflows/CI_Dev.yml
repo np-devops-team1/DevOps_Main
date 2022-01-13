@@ -8,14 +8,12 @@ jobs:
     steps:
 
     - id: 'update_worksheet'
-      uses: jroehl/gsheet.action@v1.0.0 # you can specify '@release' to always have the latest changes
+      uses: jroehl/gsheet.action@v1.2.0 # you can specify '@release' to always have the latest changes
       with:
         spreadsheetId: ${{ secrets.GOOGLE_SHEET_ID }}
         commands: | # list of commands, specified as a valid JSON string
           [
-            { "command": "addWorksheet", "args": { "worksheetTitle": "<worksheetTitle>" }},
-            { "command": "updateData", "args": { "data": [["A1", "A2", "A3"]] }},
-            { "command": "getData", "args": { "range": "'<worksheetTitle>'!A2:B3" } }
+            { "command": "getData", "args": { "range": "Sheet2!A:A" } }
           ]
       env:
         GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
