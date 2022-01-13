@@ -38,15 +38,15 @@ jobs:
 
         echo "$tag_branch"
         echo "$name_branch"
-        echo ${{env.TAG_BRANCH}}
-        echo ${{env.NAME_BRANCH}}
+        echo ${{TAG_BRANCH}}
+        echo ${{NAME_BRANCH}}
 
     - name: Analysing code with flake8
       run: |
         flake8
         
     - name: Checkout Test Script
-      if: ${{env.TAG_BRANCH == 'feat' }}
+      if: ${{TAG_BRANCH == 'feat' }}
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -54,13 +54,13 @@ jobs:
         token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
-      if: ${{env.TAG_BRANCH == 'feat' }}
+      if: ${{TAG_BRANCH == 'feat' }}
       run: |
-        mv ./test_cases/test_${{env.NAME}} ./
+        mv ./test_cases/test_${{NAME}} ./
         pytest --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
-      if: ${{env.TAG_BRANCH == 'feat' }}
+      if: ${{TAG_BRANCH == 'feat' }}
       uses: coroo/pytest-coverage-commentator@v1.0.2
       with:
         pytest-coverage: pytest-coverage.txt
