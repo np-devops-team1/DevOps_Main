@@ -29,9 +29,9 @@ jobs:
     - name: Check branch name
       run: |
 
-        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF##*})"
-        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF##*})"
-
+        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF##*/})"
+        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF##*/})"
+        echo "${GITHUB_REF##*/}"
         echo "TAG_BRANCH=$tag_branch" >> $GITHUB_ENV
         echo "NAME_BRANCH=$name_branch" >> $GITHUB_ENV
         
