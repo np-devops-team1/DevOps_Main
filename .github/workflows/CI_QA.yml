@@ -3,11 +3,13 @@ name: CI for QA Tests
 on:
   pull_request:
     branches: [main]
+    types: [closed]
 
 jobs:
   build-test:
     name: Build and Test
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/setup-python@v2
         with:
