@@ -4,7 +4,6 @@ on: [push, pull_request]
     
 jobs:
   build:
-
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-python@v2
@@ -19,6 +18,13 @@ jobs:
       uses: actions/checkout@v2
       with: 
         repository: np-devops-team1/DevOps_Main
+
+    - name: 'check for uncommitted changes'
+      run: |
+        git diff --exit-code --stat -- . ':!node_modules' \
+        || (echo "##[error] found changed files after build. please 'npm run build && npm run format'" \
+                  "and check in all changes" \
+            && exit 1)
         
     - name: Checkout Test Script
       if: startsWith(github.ref, 'refs/heads/feat/')
