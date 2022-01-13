@@ -44,7 +44,7 @@ jobs:
         flake8
         
     - name: Checkout Test Script
-      if: ${{ env.TAG == 'feat' }}
+      if: ${{ env.TAG == 'ci' }}
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
