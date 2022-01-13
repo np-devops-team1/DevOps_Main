@@ -3,7 +3,7 @@ name: CI for Dev Unit Tests
 on: [push, pull_request]
     
 jobs:
-  build:
+  - build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-python@v2
@@ -42,7 +42,7 @@ jobs:
       run: |
         flake8
   
-  build2:
+  -build2:
     runs-on: ubuntu-latest
     steps:
     condition: eq(${{env.TAG}}, "feat")
@@ -76,7 +76,7 @@ jobs:
       with:
         pytest-coverage: pytest-coverage.txt
 
-  build3:
+  -build3:
     runs-on: ubuntu-latest
     steps:
     condition: eq(${{env.TAG}}, "ci")
