@@ -38,6 +38,11 @@ jobs:
 
         echo "TAG=$tag" >> $GITHUB_ENV
         echo "NAME=$name" >> $GITHUB_ENV
+        
+        echo $${{tag}}
+        echo $${{name}}
+        echo $${{env.TAG}}
+        echo $${{env.NAME}}
 
     - name: Analysing code with flake8
       run: |
