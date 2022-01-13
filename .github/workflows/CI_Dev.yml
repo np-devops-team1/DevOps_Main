@@ -31,15 +31,44 @@ jobs:
       run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
 
     - name: Check branch name
-      run: echo $ {{ (split "/" steps.vars.outputs.short_ref)._1 }}
- 
+      run: |
+        tag = $ {{ (split "/" steps.vars.outputs.short_ref)._0 }}
+        name = $ {{ (split "/" steps.vars.outputs.short_ref)._1 }}
+
+        echo "TAG=$tag" >> $GITHUB_ENV
+        echo "NAME=$name" >> $GITHUB_ENV
+
     - name: Analysing code with flake8
       run: |
         flake8
+  
+  build2:
+    runs-on: ubuntu-latest
+    steps:
+    condition: eq(${{env.TAG}}, "feat")
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        
+    - name: Install Libraries
+      run: |
+        pip install flake8 pytest pytest-cov coverage pytest-mock
+      
+    - name: Checkout Own Repo
+      uses: actions/checkout@v2
+      with: 
+        repository: np-devops-team1/DevOps_Main
+        
+    - name: Checkout Test Script
+      uses: actions/checkout@v2
+      with:
+        repository: np-devops-team1/DevOps_Dev_UnitTest
+        path: test_cases
+        token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
       run: |
-        mv ./test_cases/*.* ./
+        mv ./test_cases/test_${{env.NAME}} ./
         pytest --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
