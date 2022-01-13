@@ -43,7 +43,7 @@ jobs:
         flake8
         
     - name: Checkout Test Script
-      if: ${{ env.TAG == "feat" }}
+      if: ${{ env.TAG == 'feat' }}
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -51,13 +51,13 @@ jobs:
         token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
-      if: ${{ env.TAG == "feat" }}
+      if: ${{ env.TAG == 'feat' }}
       run: |
         mv ./test_cases/test_${{env.NAME}} ./
         pytest --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
-      if: ${{ env.TAG == "feat" }}
+      if: ${{ env.TAG == 'feat' }}
       uses: coroo/pytest-coverage-commentator@v1.0.2
       with:
         pytest-coverage: pytest-coverage.txt
