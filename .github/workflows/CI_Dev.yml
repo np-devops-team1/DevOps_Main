@@ -6,8 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      TAG_BRANCH: ""
-      NAME_BRANCH: ""
+      TAG_BRANCH: ' '
+      NAME_BRANCH: ' '
     steps:
     - uses: actions/setup-python@v2
       with:
@@ -32,8 +32,8 @@ jobs:
     - name: Check branch name
       run: |
 
-        $env.TAG_BRANCH="$(cut -d'/' -f1 <<< ${GITHUB_REF#refs/heads/})"
-        $env.NAME_BRANCH="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
+        $env.TAG_BRANCH:"$(cut -d'/' -f1 <<< ${GITHUB_REF#refs/heads/})"
+        $env.NAME_BRANCH:"$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
         echo "${GITHUB_REF}"
         
         echo "$env.TAG_BRANCH"
