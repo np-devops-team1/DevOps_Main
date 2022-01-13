@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TAG_BRANCH: ""
+      NAME_BRANCH: ""
     steps:
     - uses: actions/setup-python@v2
       with:
@@ -29,14 +32,10 @@ jobs:
     - name: Check branch name
       run: |
 
-        tag_branch="$(cut -d'/' -f1 <<< ${GITHUB_REF#refs/heads/})"
-        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
+        env.TAG_BRANCH="$(cut -d'/' -f1 <<< ${GITHUB_REF#refs/heads/})"
+        env.NAME_BRANCH="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
         echo "${GITHUB_REF}"
-        echo "TAG_BRANCH=$tag_branch" >> $GITHUB_ENV
-        echo "NAME_BRANCH=$name_branch" >> $GITHUB_ENV
         
-        echo "$tag_branch"
-        echo "$name_branch"
         echo "$env.TAG_BRANCH"
         echo "$env.NAME_BRANCH"
 
