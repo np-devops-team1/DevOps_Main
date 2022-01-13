@@ -3,7 +3,7 @@ name: CI for Dev Unit Tests
 on: [push, pull_request]
     
 jobs:
-  - build:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-python@v2
@@ -41,55 +41,23 @@ jobs:
     - name: Analysing code with flake8
       run: |
         flake8
-  
-  - build:
-    runs-on: ubuntu-latest
-    steps:
-    condition: eq(${{env.TAG}}, "feat")
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-        
-    - name: Install Libraries
-      run: |
-        pip install flake8 pytest pytest-cov coverage pytest-mock
-      
-    - name: Checkout Own Repo
-      uses: actions/checkout@v2
-      with: 
-        repository: np-devops-team1/DevOps_Main
         
     - name: Checkout Test Script
       uses: actions/checkout@v2
+      if: $ {{tag == "feat"}}
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases
         token: ${{ secrets.DEV_REMOTE }}
         
     - name: Build coverage file
+      if: $ {{tag == "feat"}}
       run: |
         mv ./test_cases/test_${{env.NAME}} ./
         pytest --cache-clear --cov=app test/ > pytest-coverage.txt
         
     - name: Comment coverage
+      if: $ {{tag == "feat"}}
       uses: coroo/pytest-coverage-commentator@v1.0.2
       with:
         pytest-coverage: pytest-coverage.txt
-
-  - build:
-    runs-on: ubuntu-latest
-    steps:
-    condition: eq(${{env.TAG}}, "ci")
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-        
-    - name: Install Libraries
-      run: |
-        pip install flake8 pytest pytest-cov coverage pytest-mock
-      
-    - name: Checkout Own Repo
-      uses: actions/checkout@v2
-      with: 
-        repository: np-devops-team1/DevOps_Main
-        
