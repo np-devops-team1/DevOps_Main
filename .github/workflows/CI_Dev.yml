@@ -20,6 +20,7 @@ jobs:
         repository: np-devops-team1/DevOps_Main
         
     - name: Checkout Test Script
+      if: startsWith(github.ref, 'refs/heads/feat/')
       uses: actions/checkout@v2
       with:
         repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -30,7 +31,24 @@ jobs:
       run: |
         flake8
         
-    - name: Begin Pytest
+    - name: Checkout Test Script
+      if: startsWith(github.ref, 'refs/heads/feat/')
+      uses: actions/checkout@v2
+      with:
+        repository: np-devops-team1/DevOps_Dev_UnitTest
+        path: test_cases
+        token: ${{ secrets.DEV_REMOTE }}
+        
+    - name: Build coverage file
+      if: startsWith(github.ref, 'refs/heads/feat/')
       run: |
-        mv ./test_cases/*.* ./
-        coverage run -m pytest
+        name_branch="$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})"
+        mv ./test_cases/test_'$name_branch'.py ./
+        pytest test_'$name_branch'.py --cache-clear --cov=app test/ > pytest-coverage.txt
+        
+    - name: Comment coverage
+      if: startsWith(github.ref, 'refs/heads/feat/')
+      uses: coroo/pytest-coverage-commentator@v1.0.2
+      with:
+        pytest-coverage: pytest-coverage.txt
+
