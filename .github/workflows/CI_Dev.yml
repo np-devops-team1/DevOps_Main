@@ -6,29 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - id: 'update_worksheet'
-        uses: jroehl/gsheet.action@v1.2.0 # you can specify '@release' to always have the latest changes
-        with:
-          spreadsheetId: 1quwJHo9mpur_1BPpvgaj03DGeDl8EhAuPRxd9AJxF4c
-          commands: | # list of commands, specified as a valid JSON string
-            [
-              { "command": "appendData", "args": { "worksheetTitle": "test sheet", 
-                "minCol": 1,
-                "data": [
-                  ["itgc-compliance-action", "false", "false", "false", "true", "true", "false", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true", "true"]
-                ]
-              } }
-            ]
-        env:
-          GSHEET_CLIENT_EMAIL: ${{ secrets.GSHEET_CLIENT_EMAIL }}
-          GSHEET_PRIVATE_KEY: ${{ secrets.GSHEET_PRIVATE_KEY }}
-          
-      - name: dump results
-        env:
-          #  the output of the action can be found in ${{ steps.update_worksheet.outputs.results }}
-          RESULTS: ${{ steps.update_worksheet.outputs.results }}
-        run: echo "$RESULTS" | jq
-
     - uses: actions/setup-python@v2
       with:
         python-version: 3.8
