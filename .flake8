@@ -1,5 +1,5 @@
 [flake8]
-ignore = 
+ignore =
     D203,
     # E501 line too long
     E501
