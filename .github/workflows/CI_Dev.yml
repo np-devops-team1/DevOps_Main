@@ -43,6 +43,23 @@ jobs:
         repository: np-devops-team1/DevOps_Dev_UnitTest
         path: test_cases/${{steps.get_branch_id.outputs.branch}}
         token: ${{ secrets.DEV_REMOTE }}
+
+    - name: Generate coverage report
+      run: |
+        pytest --cov=./ --cov-report=xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: 81e01a89-f6b5-4711-b224-d09162825fad
+        directory: ./coverage/reports/
+        env_vars: OS,PYTHON
+        fail_ci_if_error: true
+        files: ./coverage1.xml,./coverage2.xml
+        flags: unittests
+        name: codecov-umbrella
+        path_to_write_report: ./coverage/codecov_report.txt
+        verbose: true
         
     - name: Build coverage file
       if: startsWith(github.ref, 'refs/heads/feat/')
