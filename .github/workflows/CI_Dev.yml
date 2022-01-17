@@ -63,6 +63,7 @@ jobs:
         run: |
           pytest --cov=./ --cov-report=xml
 
+<<<<<<< HEAD
       - name: Upload coverage to Codecov
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
@@ -77,6 +78,23 @@ jobs:
           flags: unittests
           name: codecov-umbrella
           verbose: true
+=======
+    - name: Analysing code with flake8
+      run: |
+        flake8 main.py
+    - id: 'get_branch_id'
+      run: | 
+        echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
+        
+    - name: Checkout One Test Script
+      if: | 
+        startsWith(github.ref, 'refs/heads/feat/')
+      uses: actions/checkout@v2
+      with:
+        repository: np-devops-team1/DevOps_Dev_UnitTest
+        path: test_cases/${{steps.get_branch_id.outputs.branch}}
+        token: ${{ secrets.DEV_REMOTE }}
+>>>>>>> d09d32e54c6aa4577d0394cbb0419f38d5496824
 
       - name: Build coverage file
         if: |
