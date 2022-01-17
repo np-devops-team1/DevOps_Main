@@ -30,7 +30,7 @@ jobs:
 
       - name: test
         run: |
-          echo ${github.head_ref}
+          echo ${{github.head_ref}}
 
       - name: Checkout One Test Script
         if: |
