@@ -24,16 +24,6 @@ jobs:
         run: |
           flake8 main.py
 
-      - name: Get branch id (push)
-        if: github.event_name == 'push'
-        id: get_branch_id
-        run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
-
-      - name: Get branch id (pull request)
-        if: github.event_name == 'pull_request'
-        id: get_branch_id
-        run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_HEAD_REF}))"
-
       - name: Checkout One Test Script
         if: |
           startsWith(github.ref, 'refs/heads/feat/') ||
@@ -54,14 +44,19 @@ jobs:
           path: test_cases
           token: ${{ secrets.DEV_REMOTE }}
 
-      - name: Generate coverage report
+      - name: Generate coverage report (push)
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cov=./ --cov-report=xml test_cases/test_cases/$(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})
+
+      - name: Generate coverage report (pull request)
+        if: |
           startsWith(github.head_ref, 'feat/') ||
-          startsWith(github.ref, 'refs/heads/main') ||
           startsWith(github.head_ref, 'main')
         run: |
-          pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id.outputs.branch}}
+          pytest --cov=./ --cov-report=xml test_cases/test_cases/$(cut -d'/' -f2 <<< ${GITHUB_HEAD_REF})
 
       - name: Upload coverage to Codecov
         if: |
@@ -80,14 +75,19 @@ jobs:
           name: codecov-umbrella
           verbose: true
 
-      - name: Build coverage file
+      - name: Build coverage file (push)
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cache-clear --cov=. $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/})/ > pytest-coverage.txt
+
+      - name: Build coverage file (pull request)
+        if: |
           startsWith(github.head_ref, 'feat/') ||
-          startsWith(github.ref, 'refs/heads/main') ||
           startsWith(github.head_ref, 'main')
         run: |
-          pytest --cache-clear --cov=. ${{steps.get_branch_id.outputs.branch}}/ > pytest-coverage.txt
+          pytest --cache-clear --cov=. $(cut -d'/' -f2 <<< ${GITHUB_HEAD_REF})/ > pytest-coverage.txt
 
       - name: Comment coverage
         if: |
