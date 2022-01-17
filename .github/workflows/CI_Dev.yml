@@ -1,6 +1,10 @@
 name: CI for Dev Unit Tests
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    branches:
+    - main
 
 jobs:
   build:
@@ -34,7 +38,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: np-devops-team1/DevOps_Dev_UnitTest
-          path: test_cases/${{steps.get_branch_id.outputs.branch}}
+          path: test_cases
           token: ${{ secrets.DEV_REMOTE }}
 
       - name: Checkout ALL Test Script
@@ -51,7 +55,7 @@ jobs:
           startsWith(github.ref, 'refs/heads/feat/') || 
           startsWith(github.ref, 'refs/heads/main')
         run: |
-          pytest --cov=./ --cov-report=xml
+          pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id.outputs.branch}}
 
       - name: Upload coverage to Codecov
         if: |
