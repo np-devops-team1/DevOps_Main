@@ -30,7 +30,8 @@ jobs:
 
       - name: Checkout One Test Script
         if: |
-          startsWith(github.ref, 'refs/heads/feat/')
+          startsWith(github.ref, 'refs/heads/feat/') ||
+          startsWith(github.head_ref, 'refs/heads/feat/')
         uses: actions/checkout@v2
         with:
           repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -39,7 +40,8 @@ jobs:
 
       - name: Checkout ALL Test Script
         if: |
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'refs/heads/main')
         uses: actions/checkout@v2
         with:
           repository: np-devops-team1/DevOps_Dev_UnitTest
@@ -49,14 +51,18 @@ jobs:
       - name: Generate coverage report
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.head_ref, 'refs/heads/feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'refs/heads/main')
         run: |
           pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id.outputs.branch}}
 
       - name: Upload coverage to Codecov
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.head_ref, 'refs/heads/feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'refs/heads/main')
         uses: codecov/codecov-action@v2
         with:
           token: 81e01a89-f6b5-4711-b224-d09162825fad
@@ -71,14 +77,18 @@ jobs:
       - name: Build coverage file
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.head_ref, 'refs/heads/feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'refs/heads/main')
         run: |
           pytest --cache-clear --cov=. ${{steps.get_branch_id.outputs.branch}}/ > pytest-coverage.txt
 
       - name: Comment coverage
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.head_ref, 'refs/heads/feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'refs/heads/main')
         uses: coroo/pytest-coverage-commentator@v1.0.2
         with:
           pytest-coverage: pytest-coverage.txt
