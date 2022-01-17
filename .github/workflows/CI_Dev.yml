@@ -25,8 +25,12 @@ jobs:
           flake8 main.py
 
       - id: "get_branch_id"
+        if: github.event_name == 'push'
         run: |
-          echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF##*/})"
 
       - name: Checkout One Test Script
         if: |
