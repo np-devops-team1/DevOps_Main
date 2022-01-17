@@ -1,4 +1,5 @@
 # DevOps Project Team 1
+[![codecov](https://codecov.io/gh/np-devops-team1/DevOps_Main/branch/main/graph/badge.svg?token=6SFZR3SCVN)](https://codecov.io/gh/np-devops-team1/DevOps_Main)
 
 ## Commit Message Style
 
