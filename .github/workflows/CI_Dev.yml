@@ -28,6 +28,11 @@ jobs:
         run: |
           echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
 
+      - name: test
+        run: |
+          echo github.ref
+          echo github.head_ref
+
       - name: Checkout One Test Script
         if: |
           startsWith(github.ref, 'refs/heads/feat/') ||
