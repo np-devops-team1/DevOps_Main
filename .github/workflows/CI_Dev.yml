@@ -24,13 +24,13 @@ jobs:
         run: |
           flake8 main.py
 
-      - id: "get_branch_id"
+      - id: "get_branch_id" (push)
         if: github.event_name == 'push'
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+
+      - id: "get_branch_id" (pull request)
         if: github.event_name == 'pull_request'
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF##*/})"
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_HEAD_REF##*/})"
 
       - name: Checkout One Test Script
         if: |
