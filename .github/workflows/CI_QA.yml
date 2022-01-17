@@ -15,9 +15,9 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Install Pytest
+      - name: Install Libraries
         run: |
-          pip install pytest
+          pip install pytest pytest-mock
 
       - name: Checkout Own Repo
         uses: actions/checkout@v2
