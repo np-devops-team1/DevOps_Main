@@ -24,13 +24,13 @@ jobs:
         run: |
           flake8 main.py
 
-      - name: Get branch id (push)
-        id: "get_branch_id"
-        if: github.event_name == 'push'
-        run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
+      # - name: Get branch id (push)
+      #   id: get_branch_id
+      #   if: github.event_name == 'push'
+      #   run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
 
       - name: Get branch id (pull request)
-        id: "get_branch_id"
+        id: get_branch_id
         if: github.event_name == 'pull_request'
         run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_HEAD_REF}))"
 
