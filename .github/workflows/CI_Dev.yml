@@ -20,9 +20,19 @@ jobs:
         with:
           repository: np-devops-team1/DevOps_Main
 
+      - name: Checkout Test Script
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.ref, 'refs/heads/main')
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_Dev_UnitTest
+          path: test_cases
+          token: ${{ secrets.DEV_REMOTE }}
+
       - name: Analysing code with flake8
         run: |
-          flake8
+          flake8 main.py
 
       - id: "get_branch_id"
         run: |
