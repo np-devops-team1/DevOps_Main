@@ -70,13 +70,13 @@ jobs:
         if: |
           startsWith(github.ref, 'refs/heads/main')
         run: |
-          pytest --cov=./ --cov-report=xml test_cases
+          pytest --cov=./ --cov-report=xml test_cases/test_cases
 
       - name: Generate coverage report for branch main test (pull request)
         if: |
           startsWith(github.head_ref, 'main')
         run: |
-          pytest --cov=./ --cov-report=xml test_cases
+          pytest --cov=./ --cov-report=xml test_cases/test_cases
 
       - name: Upload coverage to Codecov for branch test
         if: |
@@ -111,13 +111,13 @@ jobs:
         if: |
           startsWith(github.ref, 'refs/heads/main')
         run: |
-          pytest --cache-clear --cov=. test_cases > pytest-coverage.txt
+          pytest --cache-clear --cov=. test_cases/test_cases > pytest-coverage.txt
 
       - name: Build coverage file for main test (pull request)
         if: |
           startsWith(github.head_ref, 'main')
         run: |
-          pytest --cache-clear --cov=. test_cases > pytest-coverage.txt
+          pytest --cache-clear --cov=. test_cases/test_cases > pytest-coverage.txt
 
       - name: Comment coverage for test
         if: |
