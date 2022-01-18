@@ -144,6 +144,13 @@ def generate_initial_buildings(city_size):
     return buildings
 
 
+def generate_new_board(city_size):
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    board = [["" for i in range(city_size)] for i in range(city_size)]
+    return board
+
+
 def main_menu_option_selection():
     main_menu_options = {"0": exit_main_menu,
                          "1": start_new_game,
