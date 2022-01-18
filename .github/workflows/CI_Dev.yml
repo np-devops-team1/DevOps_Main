@@ -70,7 +70,9 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
           startsWith(github.head_ref, 'feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
           startsWith(github.head_ref, 'main')
         uses: codecov/codecov-action@v2
         with:
@@ -88,14 +90,14 @@ jobs:
           startsWith(github.ref, 'refs/heads/feat/') || 
           startsWith(github.ref, 'refs/heads/main')
         run: |
-          pytest --cache-clear --cov=. ${{steps.get_branch_id_push.outputs.branch}}/ > pytest-coverage.txt
+          pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_push.outputs.branch}} > pytest-coverage.txt
 
       - name: Build coverage file (pull request)
         if: |
           startsWith(github.head_ref, 'feat/') ||
           startsWith(github.head_ref, 'main')
         run: |
-          pytest --cache-clear --cov=. ${{steps.get_branch_id_pr.outputs.branch}}/ > pytest-coverage.txt
+          pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_pr.outputs.branch}} > pytest-coverage.txt
 
       - name: Comment coverage
         if: |
