@@ -111,6 +111,15 @@ def choose_building_pool():
     print("choose_building_pool")
 
 
+def city_size_selection(city_size_restrictions):
+    while True:
+        user_input = input("Enter city size (min {}, max {}): ".format(city_size_restrictions["min"], city_size_restrictions["max"]))
+        if user_input in city_size_restrictions["city_sizes"]:
+            return int(user_input)
+        else:
+            print("Invalid city size, try again")
+
+
 def main_menu_option_selection():
     main_menu_options = {"0": exit_main_menu,
                          "1": start_new_game,
