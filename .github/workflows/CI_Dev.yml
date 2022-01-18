@@ -54,26 +54,36 @@ jobs:
           path: test_cases
           token: ${{ secrets.DEV_REMOTE }}
 
-      - name: Generate coverage report (push)
+      - name: Generate coverage report for branch test (push)
         if: |
-          startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.ref, 'refs/heads/feat/')
         run: |
           pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id_push.outputs.branch}}
 
-      - name: Generate coverage report (pull request)
+      - name: Generate coverage report for branch test (pull request)
         if: |
-          startsWith(github.head_ref, 'feat/') ||
-          startsWith(github.head_ref, 'main')
+          startsWith(github.head_ref, 'feat/')
         run: |
           pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id_pr.outputs.branch}}
 
-      - name: Upload coverage to Codecov
+      - name: Generate coverage report for main test (push)
         if: |
-          startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.head_ref, 'feat/') ||
-          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cov=./ --cov-report=xml test_cases
+
+      - name: Generate coverage report for branch main test (pull request)
+        if: |
           startsWith(github.head_ref, 'main')
+        run: |
+          pytest --cov=./ --cov-report=xml test_cases
+
+      - name: Upload coverage to Codecov for branch test
+        if: |
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'main') ||
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.head_ref, 'feat/')
         uses: codecov/codecov-action@v2
         with:
           token: 81e01a89-f6b5-4711-b224-d09162825fad
@@ -85,21 +95,31 @@ jobs:
           name: codecov-umbrella
           verbose: true
 
-      - name: Build coverage file (push)
+      - name: Build coverage file for branch test (push)
         if: |
-          startsWith(github.ref, 'refs/heads/feat/') || 
-          startsWith(github.ref, 'refs/heads/main')
+          startsWith(github.ref, 'refs/heads/feat')
         run: |
           pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_push.outputs.branch}} > pytest-coverage.txt
 
-      - name: Build coverage file (pull request)
+      - name: Build coverage file for branch test (pull request)
         if: |
-          startsWith(github.head_ref, 'feat/') ||
-          startsWith(github.head_ref, 'main')
+          startsWith(github.head_ref, 'feat')
         run: |
           pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_pr.outputs.branch}} > pytest-coverage.txt
 
-      - name: Comment coverage
+      - name: Build coverage file for main test (push)
+        if: |
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cache-clear --cov=. test_cases > pytest-coverage.txt
+
+      - name: Build coverage file for main test (pull request)
+        if: |
+          startsWith(github.head_ref, 'main')
+        run: |
+          pytest --cache-clear --cov=. test_cases > pytest-coverage.txt
+
+      - name: Comment coverage for test
         if: |
           startsWith(github.ref, 'refs/heads/feat/') || 
           startsWith(github.head_ref, 'feat/') ||
