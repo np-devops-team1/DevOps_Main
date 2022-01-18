@@ -10,6 +10,31 @@ jobs:
         with:
           python-version: 3.8
 
+      # Runs the telegram notify action to send a notification
+      - name: Telegram Notify
+        uses: appleboy/telegram-action@master
+        if: github.event_name == 'pull_request'
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            A new PR is raised [View all PR's](https://github.com/<user>/<repo>/pulls)
+            
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        if: github.event_name == 'push'
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
       - name: Install Libraries
         run: |
           python -m pip install --upgrade pip
