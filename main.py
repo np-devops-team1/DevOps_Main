@@ -120,6 +120,18 @@ def city_size_selection(city_size_restrictions):
             print("Invalid city size, try again")
 
 
+def generate_board_metadata(city_size, all_letter_display_pairs, all_letter_input_pairs):
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    letter_display_pairs = {i: all_letter_display_pairs[i] for i in range(city_size)}
+    letter_input_pairs = {list(all_letter_input_pairs)[i]: i for i in range(city_size)}
+    total_turns = city_size * city_size
+
+    metadata = {"total_turns": total_turns, "letter_display_pairs": letter_display_pairs, "letter_input_pairs": letter_input_pairs}
+
+    return metadata
+
+
 def main_menu_option_selection():
     main_menu_options = {"0": exit_main_menu,
                          "1": start_new_game,
