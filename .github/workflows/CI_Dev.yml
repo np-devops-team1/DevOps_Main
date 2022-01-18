@@ -1,95 +1,110 @@
 name: CI for Dev Unit Tests
 
 on: [push, pull_request]
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-        
-    - name: Install Libraries
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest pytest-cov coverage pytest-mock
-      
-    - name: Checkout Own Repo
-      uses: actions/checkout@v2
-      with: 
-        repository: np-devops-team1/DevOps_Main
-        
-    - name: Checkout Test Script
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/') || 
-        startsWith(github.ref, 'refs/heads/main')
-      uses: actions/checkout@v2
-      with:
-        repository: np-devops-team1/DevOps_Dev_UnitTest
-        path: test_cases
-        token: ${{ secrets.DEV_REMOTE }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
 
-    - name: Analysing code with flake8
-      run: |
-        flake8
+      - name: Install Libraries
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest pytest-cov coverage pytest-mock
 
-    - id: 'get_branch_id'
-      run: | 
-        echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
-        
-    - name: Checkout One Test Script
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/')
-      uses: actions/checkout@v2
-      with:
-        repository: np-devops-team1/DevOps_Dev_UnitTest
-        path: test_cases/${{steps.get_branch_id.outputs.branch}}
-        token: ${{ secrets.DEV_REMOTE }}
+      - name: Checkout Own Repo
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_Main
 
-    - name: Checkout ALL Test Script
-      if: | 
-        startsWith(github.ref, 'refs/heads/main')
-      uses: actions/checkout@v2
-      with:
-        repository: np-devops-team1/DevOps_Dev_UnitTest
-        path: test_cases
-        token: ${{ secrets.DEV_REMOTE }}
+      - name: Analysing code with flake8
+        run: |
+          flake8 main.py
 
-    - name: Generate coverage report
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/') || 
-        startsWith(github.ref, 'refs/heads/main')
-      run: |
-        pytest --cov=./ --cov-report=xml
+      - name: Get branch id (push)
+        if: github.event_name == 'push'
+        id: get_branch_id_push
+        run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_REF#refs/heads/}))"
 
-    - name: Upload coverage to Codecov
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/') || 
-        startsWith(github.ref, 'refs/heads/main')
-      uses: codecov/codecov-action@v2
-      with:
-        token: 81e01a89-f6b5-4711-b224-d09162825fad
-        directory: ./coverage/reports/
-        env_vars: OS,PYTHON
-        fail_ci_if_error: true
-        files: ./coverage1.xml,./coverage2.xml
-        flags: unittests
-        name: codecov-umbrella
-        verbose: true
-        
-    - name: Build coverage file
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/') || 
-        startsWith(github.ref, 'refs/heads/main')
-      run: |
-        pytest --cache-clear --cov=. ${{steps.get_branch_id.outputs.branch}}/ > pytest-coverage.txt
-        
-    - name: Comment coverage
-      if: | 
-        startsWith(github.ref, 'refs/heads/feat/') || 
-        startsWith(github.ref, 'refs/heads/main')
-      uses: coroo/pytest-coverage-commentator@v1.0.2
-      with:
-        pytest-coverage: pytest-coverage.txt
+      - name: Get branch id (pull request)
+        if: github.event_name == 'pull_request'
+        id: get_branch_id_pr
+        run: echo "##[set-output name=branch;]$(echo $(cut -d'/' -f2 <<< ${GITHUB_HEAD_REF}))"
 
+      - name: Checkout One Test Script
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') ||
+          startsWith(github.head_ref, 'feat/')
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_Dev_UnitTest
+          path: test_cases
+          token: ${{ secrets.DEV_REMOTE }}
+
+      - name: Checkout ALL Test Script
+        if: |
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'main')
+        uses: actions/checkout@v2
+        with:
+          repository: np-devops-team1/DevOps_Dev_UnitTest
+          path: test_cases
+          token: ${{ secrets.DEV_REMOTE }}
+
+      - name: Generate coverage report (push)
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id_push.outputs.branch}}
+
+      - name: Generate coverage report (pull request)
+        if: |
+          startsWith(github.head_ref, 'feat/') ||
+          startsWith(github.head_ref, 'main')
+        run: |
+          pytest --cov=./ --cov-report=xml test_cases/test_cases/${{steps.get_branch_id_pr.outputs.branch}}
+
+      - name: Upload coverage to Codecov
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.head_ref, 'feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'main')
+        uses: codecov/codecov-action@v2
+        with:
+          token: 81e01a89-f6b5-4711-b224-d09162825fad
+          directory: ./
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          verbose: true
+
+      - name: Build coverage file (push)
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.ref, 'refs/heads/main')
+        run: |
+          pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_push.outputs.branch}} > pytest-coverage.txt
+
+      - name: Build coverage file (pull request)
+        if: |
+          startsWith(github.head_ref, 'feat/') ||
+          startsWith(github.head_ref, 'main')
+        run: |
+          pytest --cache-clear --cov=. test_cases/test_cases/${{steps.get_branch_id_pr.outputs.branch}} > pytest-coverage.txt
+
+      - name: Comment coverage
+        if: |
+          startsWith(github.ref, 'refs/heads/feat/') || 
+          startsWith(github.head_ref, 'feat/') ||
+          startsWith(github.ref, 'refs/heads/main') ||
+          startsWith(github.head_ref, 'main')
+        uses: coroo/pytest-coverage-commentator@v1.0.2
+        with:
+          pytest-coverage: pytest-coverage.txt

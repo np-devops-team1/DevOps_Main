@@ -50,10 +50,10 @@ locationDic = {"A1": ["A2", "B1"],
                "D4": ["D3", "C4"]}
 buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
 hseScoreDic = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1}
-houseHis = [] 
-beachHis= []
-factoryScoreHis = [] 
-shopScoreHis = [] 
+houseHis = []
+beachHis = []
+factoryScoreHis = []
+shopScoreHis = []
 highwayScoreHis = []
 
 buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
@@ -81,11 +81,6 @@ def CityMapFunc():
     print("\t   +------------------------------+")
 
 
-def ControlFlow():
-    while True:
-        MainGame()
-
-
 def buildBuilding(option, plots):
 
     position = input("Build where?")
@@ -105,32 +100,43 @@ def buildBuilding(option, plots):
             return False
 
     plots[position] = buildings[option]
-    SubtractBuildingCount(option)
+    # SubtractBuildingCount(option)
     plots["lastPlace"] = position
     plots["Turn"] = (int)(plots["Turn"]) + 1
     CityMapFunc()
     return plots
 
 
-def MainGame():
-    FirstMenu()
+def choose_building_pool():
+    print("choose_building_pool")
 
-    try:
-        option = (int)(input("Your choice? "))
-    except ValueError:
-        option = 100
 
-    if option == 1:
-        StartGameFunc()
-    elif option == 2:
-        plots, buildings, loaded = LoadGameFunc()
-        if loaded is True:
-            StartGameFunc()
+def main_menu_option_selection():
+    main_menu_options = {"0": exit_main_menu,
+                         "1": start_new_game,
+                         "2": load_saved_game,
+                         "3": choose_building_pool,
+                         "4": show_high_scores}
 
-    elif option == 0:
-        exit(0)
+    user_input = input("Your choice? ")
+
+    if user_input in list(main_menu_options.keys()):
+        return_values = main_menu_options[user_input]()
+
+        if "exit" in return_values:
+            if return_values["exit"] is True:
+                return {"exit": True}
+
+        if "bp" in return_values:
+            return {"bp": return_values["bp"]}
+
     else:
-        print("invalid option, try again")
+        return {"err": "invalid option, try again"}
+    return {}
+
+
+def exit_main_menu():
+    return {"exit": True}
 
 
 # generates random option for buildings to be placed on plots
@@ -154,7 +160,7 @@ def CheckAdjacency(loc):
 def calculateBCHscore(place):
     placeSplit = list(place)
     row = placeSplit[0]
-    col = placeSplit[1]
+    # col = placeSplit[1]
     rowLeft = list(plots.keys())[0][0]
     rowRight = list(plots.keys())[-3][0]
 
@@ -278,13 +284,14 @@ def ScoreAdjacentBuildings(plots):
     print("Total Score = ", TLScore)
 
 
-def FirstMenu():
-    print("Welcome, mayor of Simp City!")
+def display_main_menu():
+    print("\nWelcome, mayor of Simp City!")
     print("------------------------------")
-
     print("1. Start new game")
     print("2. Load saved game")
-    print("0. Exit")
+    print("3. Choose building pool")
+    print("4. Show high scores")
+    print("\n0. Exit")
 
 
 def printGameMenuFunc(buildingOne, buildingTwo):
@@ -300,19 +307,7 @@ def printRemainingBuildings():
     print("remainingbuilding")
 
 
-def buildBuilding(option, plots):
-    return True
-
-
-def SaveGameFunc():
-    print("save game")
-
-
-def ScoreAdjacentBuildings():
-    print("score")
-
-
-def StartGameFunc():
+def start_new_game():
     global plots
     plots["Turn"] = (int)(plots["Turn"]) + 1
 
@@ -348,10 +343,8 @@ def StartGameFunc():
             continue
         elif choice == 5:
             SaveGameFunc()
-            FirstMenu()
             break
         elif choice == 0:
-            MainGame()
             break
         else:
             print("invalid option, try again")
@@ -376,7 +369,7 @@ def SaveGameFunc():
     print("Game Saved!")
 
 
-def LoadGameFunc():
+def load_saved_game():
     try:
         with open("dict.txt") as f:
             data = f.read()
@@ -397,6 +390,25 @@ def LoadGameFunc():
         print("Loaded Data is incorrect")
         return plots, buildCount, False
 
-def __init__():
-    ControlFlow()
-    
+
+def show_high_scores():
+    return {}
+
+
+if __name__ == "__main__":
+    building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
+
+    main_running = True
+    while main_running:
+        display_main_menu()
+        return_values = main_menu_option_selection()
+
+        if "exit" in return_values:
+            if return_values["exit"] is True:
+                main_running = False
+
+        if "err" in return_values:
+            print(return_values["err"])
+
+        if "bp" in return_values:
+            building_pool = return_values["bp"]
