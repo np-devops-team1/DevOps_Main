@@ -132,6 +132,18 @@ def generate_board_metadata(city_size, all_letter_display_pairs, all_letter_inpu
     return metadata
 
 
+def generate_initial_buildings(city_size):
+    assert len(building_pool) > 0, "building pool empty"
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    max_buildings = city_size * 2
+    buildings = {}
+    for b in building_pool:
+        buildings[b] = max_buildings
+
+    return buildings
+
+
 def main_menu_option_selection():
     main_menu_options = {"0": exit_main_menu,
                          "1": start_new_game,
