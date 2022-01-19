@@ -411,9 +411,10 @@ def exit_main_menu():
     return {"exit": True}
 
 
-if __name__ == "__main__":
-    building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
+building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
 
+
+def master_loop():
     main_running = True
     while main_running:
         display_main_menu()
@@ -428,3 +429,7 @@ if __name__ == "__main__":
 
         if "bp" in return_values:
             building_pool = return_values["bp"]
+
+
+if __name__ == "__main__":
+    master_loop()
