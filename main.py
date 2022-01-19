@@ -411,6 +411,7 @@ def exit_main_menu():
     return {"exit": True}
 
 
+global building_pool
 building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
 
 
@@ -428,6 +429,7 @@ def master_loop():
             print(return_values["err"])
 
         if "bp" in return_values:
+            global building_pool
             building_pool = return_values["bp"]
 
 
