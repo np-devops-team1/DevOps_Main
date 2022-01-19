@@ -1,28 +1,4 @@
-# The Simp Game
 
-# Buildings
-# ---------------------- #
-# Beach (BCH) , Factory (FAC) , House (HSE) , Shop (SHP) , Highway (HWY)
-
-# Board
-# ---------------------- #
-# [['A1','B1','C1','D1'],
-#  ['A2','B2','C2','D2'],
-#  ['A3','B3','C3','D3'],
-#  ['A4','B4','C4','D4']]
-
-# Game Options
-# -----------------------#
-# 6 Options
-# 1. Place Random Building
-# 2. Place Random Building
-# 3. See remaining buildings
-# 4. See current score
-
-# 5. Save game
-# 0. Exit to main menu
-
-# Imports
 import random
 import ast
 
@@ -105,47 +81,6 @@ def buildBuilding(option, plots):
     plots["Turn"] = (int)(plots["Turn"]) + 1
     CityMapFunc()
     return plots
-
-
-def choose_building_pool():
-    print("choose_building_pool")
-
-
-def city_size_selection(city_size_restrictions):
-    while True:
-        user_input = input("Enter city size (min {}, max {}): ".format(city_size_restrictions["min"], city_size_restrictions["max"]))
-        if user_input in city_size_restrictions["city_sizes"]:
-            return int(user_input)
-        else:
-            print("Invalid city size, try again")
-
-
-def main_menu_option_selection():
-    main_menu_options = {"0": exit_main_menu,
-                         "1": start_new_game,
-                         "2": load_saved_game,
-                         "3": choose_building_pool,
-                         "4": show_high_scores}
-
-    user_input = input("Your choice? ")
-
-    if user_input in list(main_menu_options.keys()):
-        return_values = main_menu_options[user_input]()
-
-        if "exit" in return_values:
-            if return_values["exit"] is True:
-                return {"exit": True}
-
-        if "bp" in return_values:
-            return {"bp": return_values["bp"]}
-
-    else:
-        return {"err": "invalid option, try again"}
-    return {}
-
-
-def exit_main_menu():
-    return {"exit": True}
 
 
 # generates random option for buildings to be placed on plots
@@ -293,16 +228,6 @@ def ScoreAdjacentBuildings(plots):
     print("Total Score = ", TLScore)
 
 
-def display_main_menu():
-    print("\nWelcome, mayor of Simp City!")
-    print("------------------------------")
-    print("1. Start new game")
-    print("2. Load saved game")
-    print("3. Choose building pool")
-    print("4. Show high scores")
-    print("\n0. Exit")
-
-
 def printGameMenuFunc(buildingOne, buildingTwo):
     print("1. Build a", buildings[buildingOne])
     print("2. Build a", buildings[buildingTwo])
@@ -378,6 +303,46 @@ def SaveGameFunc():
     print("Game Saved!")
 
 
+def city_size_selection(city_size_restrictions):
+    while True:
+        user_input = input("Enter city size (min {}, max {}): ".format(city_size_restrictions["min"], city_size_restrictions["max"]))
+        if user_input in city_size_restrictions["city_sizes"]:
+            return int(user_input)
+        else:
+            print("Invalid city size, try again")
+
+
+def generate_board_metadata(city_size, all_letter_display_pairs, all_letter_input_pairs):
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    letter_display_pairs = {i: all_letter_display_pairs[i] for i in range(city_size)}
+    letter_input_pairs = {list(all_letter_input_pairs)[i]: i for i in range(city_size)}
+    total_turns = city_size * city_size
+
+    metadata = {"total_turns": total_turns, "letter_display_pairs": letter_display_pairs, "letter_input_pairs": letter_input_pairs}
+
+    return metadata
+
+
+def generate_initial_buildings(city_size):
+    assert len(building_pool) > 0, "building pool empty"
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    max_buildings = city_size * 2
+    buildings = {}
+    for b in building_pool:
+        buildings[b] = max_buildings
+
+    return buildings
+
+
+def generate_new_board(city_size):
+    assert type(city_size) == int, "city_size not of type 'int'"
+
+    board = [["" for i in range(city_size)] for i in range(city_size)]
+    return board
+
+
 def load_saved_game():
     try:
         with open("dict.txt") as f:
@@ -400,13 +365,57 @@ def load_saved_game():
         return plots, buildCount, False
 
 
+def choose_building_pool():
+    print("choose_building_pool")
+
+
 def show_high_scores():
     return {}
 
 
-if __name__ == "__main__":
-    building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
+def display_main_menu():
+    print("\nWelcome, mayor of Simp City!")
+    print("------------------------------")
+    print("1. Start new game")
+    print("2. Load saved game")
+    print("3. Choose building pool")
+    print("4. Show high scores")
+    print("\n0. Exit")
 
+
+def main_menu_option_selection():
+    main_menu_options = {"0": exit_main_menu,
+                         "1": start_new_game,
+                         "2": load_saved_game,
+                         "3": choose_building_pool,
+                         "4": show_high_scores}
+
+    user_input = input("Your choice? ")
+
+    if user_input in list(main_menu_options.keys()):
+        return_values = main_menu_options[user_input]()
+
+        if "exit" in return_values:
+            if return_values["exit"] is True:
+                return {"exit": True}
+
+        if "bp" in return_values:
+            return {"bp": return_values["bp"]}
+
+    else:
+        return {"err": "invalid option, try again"}
+    return {}
+
+
+def exit_main_menu():
+    return {"exit": True}
+
+
+global building_pool
+building_pool = ["BCH", "FAC", "HSE", "SHP", "HWY"]
+
+
+def master_loop():
     main_running = True
     while main_running:
         display_main_menu()
@@ -420,4 +429,9 @@ if __name__ == "__main__":
             print(return_values["err"])
 
         if "bp" in return_values:
+            global building_pool
             building_pool = return_values["bp"]
+
+
+if __name__ == "__main__":
+    master_loop()
