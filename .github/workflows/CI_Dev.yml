@@ -21,19 +21,45 @@ jobs:
           message: |
             A new PR is raised [View all PR's](https://github.com/<user>/<repo>/pulls)
             
-      - name: send telegram message on push
+      - name: send telegram notifications on pull-request
+        if: github.event_name == 'pull_request_target'
         uses: appleboy/telegram-action@master
-        if: github.event_name == 'push'
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
           message: |
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}
-            
-            Repository: ${{ github.repository }}
-            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            User: ${{ github.actor }} created new PR: [#${{ github.event.number }}](${{ github.event.pull_request.html_url }}) from branch: ${{ github.head_ref }}
+      
+      - name: send telegram notification on new issue
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            User: ${{ github.actor }} created new issue: [#${{ github.event.issue.number }}](${{ github.event.issue.html_url }})
+      
+      - name: send telegram notify on issue assigning
+        if: github.event_name == 'issues' && github.event.action == 'assigned'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            Assigned issue: [#${{ github.event.issue.number }}](${{ github.event.issue.html_url }}) to User: ${{ github.event.assignee.login }}
+      
+      - name: send telegram notify on issue close
+        if: github.event_name == 'issues' && github.event.action == 'closed'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            Issue: [#${{ github.event.issue.number }}](${{ github.event.issue.html_url }}) was closed
 
       - name: Install Libraries
         run: |
