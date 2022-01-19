@@ -9,20 +9,9 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
-
-      # Runs the telegram notify action to send a notification
-      - name: Telegram Notify
-        uses: appleboy/telegram-action@master
-        if: github.event_name == 'pull_request'
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          format: markdown
-          message: |
-            A new PR is raised [View all PR's](https://github.com/<user>/<repo>/pulls)
             
       - name: send telegram notifications on pull-request
-        if: github.event_name == 'pull_request_target'
+        if: github.event_name == 'pull_request'
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
