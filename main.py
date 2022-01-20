@@ -83,14 +83,6 @@ def buildBuilding(option, plots):
     return plots
 
 
-# generates random option for buildings to be placed on plots
-def randomOptionsFunc():
-    while True:
-        numberOne = random.randint(0, 4)
-        if buildCount[buildings[numberOne]] != 0:
-            return numberOne
-
-
 # module returns a list of adjacent locations to the function parameter
 def CheckAdjacency(loc):
     if(loc in locationDic.keys()):
@@ -301,6 +293,74 @@ def generate_new_board(city_size):
 
     board = [["" for i in range(city_size)] for i in range(city_size)]
     return board
+
+
+def get_random_buildings(buildings_tracker):
+    buildings = []
+
+    for i in range(2):
+        available_buildings = []
+        for key in buildings_tracker:
+            if buildings_tracker[key] > 0:
+                available_buildings.append(key)
+
+        index = random.randint(0, len(available_buildings) - 1)
+        buildings.append(available_buildings[index])
+
+    return buildings
+
+
+def display_board(board_tracker, buildings_tracker, board_metadata):
+    letters = board_metadata["letter_display_pairs"]
+    size = len(board_tracker)
+    row_divider = "  " + "+-----" * size + "+"
+
+    print("   ", end="")
+    for col in range(size):
+        print("  " + letters[col] + "   ", end="")
+    print(" ", buildings_tracker)
+
+    for row_index, row_value in enumerate(board_tracker, start=1):
+        print(row_divider)
+        print(" {}|".format(row_index), end="")
+        for cell in row_value:
+            if cell == "":
+                print("     |", end="")
+            else:
+                print(" " + cell + " |", end="")
+        print()
+    print(row_divider)
+
+
+def display_game_menu(building_options):
+    print("1. Build a", building_options[0])
+    print("2. Build a", building_options[1])
+    print("3. See current score")
+    print("\n4. Save game")
+    print("0. Exit to main menu")
+
+
+def game_menu_option_selection(board_tracker, buildings_tracker, building_options, current_turn, board_metadata):
+    main_menu_options = {"0": exit_game_menu,
+                         "1": build_building,
+                         "2": build_building,
+                         "3": see_current_score,
+                         "4": save_game}
+
+    user_input = input("Your choice? ")
+
+    if user_input in list(main_menu_options.keys()):
+        if user_input == "1" or user_input == "2":
+            return main_menu_options[user_input](board_tracker, buildings_tracker, building_options[int(user_input) - 1], current_turn, board_metadata)
+        else:
+            return main_menu_options[user_input]()
+
+    else:
+        return {"err": "Invalid option, try again", "proceed_next_turn": False}
+
+
+def exit_game_menu():
+    return {"exit": True}
 
 
 def load_saved_game():
