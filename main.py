@@ -228,69 +228,6 @@ def ScoreAdjacentBuildings(plots):
     print("Total Score = ", TLScore)
 
 
-def printGameMenuFunc(buildingOne, buildingTwo):
-    print("1. Build a", buildings[buildingOne])
-    print("2. Build a", buildings[buildingTwo])
-    print("3. See remaining buildings ")
-    print("4. See current score ")
-    print("5. Save game ")
-    print("0. Exit to main menu ")
-
-
-def printRemainingBuildings():
-    print("remainingbuilding")
-
-
-def start_new_game():
-    global plots
-    plots["Turn"] = (int)(plots["Turn"]) + 1
-
-    correctInput = True
-    # When turn is not 16
-    while (int)(plots["Turn"]) <= 16:
-        print("Turn: ", plots["Turn"])
-        CityMapFunc()
-        # To ensure no re-running of random code for invalid inputs
-        if correctInput:
-            optionOne = randomOptionsFunc()
-            optionTwo = randomOptionsFunc()
-
-        correctInput = True
-        printGameMenuFunc(optionOne, optionTwo)
-
-        try:
-            choice = (int)(input("Your choice? "))
-        except ValueError:
-            choice = 100
-
-        if choice == 1:
-            result = buildBuilding(optionOne, plots)
-
-        elif choice == 2:
-            result = buildBuilding(optionOne, plots)
-
-        elif choice == 3:
-            printRemainingBuildings()
-        elif choice == 4:
-            print("----------------------------------")
-            ScoreAdjacentBuildings(plots)
-            continue
-        elif choice == 5:
-            SaveGameFunc()
-            break
-        elif choice == 0:
-            break
-        else:
-            print("invalid option, try again")
-            correctInput = False
-            continue
-        if result is False:
-            continue
-
-        # plots = result
-    print("----------------------------------")
-
-
 # module saves game data to txt file
 def SaveGameFunc():
     f = open("dict.txt", "w")
@@ -301,6 +238,29 @@ def SaveGameFunc():
     f2.write(str(bcount))
     f2.close()
     print("Game Saved!")
+
+
+def start_new_game():
+    city_size_restrictions = {"min": 4, "max": 8}
+    city_size_restrictions["city_sizes"] = [str(i).zfill(0) for i in range(city_size_restrictions["min"], city_size_restrictions["max"] + 1)]
+    all_letter_display_pairs = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
+    all_letter_input_pairs = {"a": 0, "b": 1, "c": 2, "d": 3, "e": 4, "f": 5, "g": 6, "h": 7}
+
+    city_size = city_size_selection(city_size_restrictions)
+    board_metadata = generate_board_metadata(city_size, all_letter_display_pairs, all_letter_input_pairs)
+
+    buildings_tracker = generate_initial_buildings(city_size)
+    board_tracker = generate_new_board(city_size)
+
+    current_turn = 0
+
+    run_game(board_tracker, buildings_tracker, current_turn, board_metadata)
+
+    return {}
+
+
+def run_game(board_tracker, buildings_tracker, current_turn, board_metadata):
+    return
 
 
 def city_size_selection(city_size_restrictions):
@@ -366,7 +326,7 @@ def load_saved_game():
 
 
 def choose_building_pool():
-    print("choose_building_pool")
+    return{}
 
 
 def show_high_scores():
@@ -404,6 +364,7 @@ def main_menu_option_selection():
 
     else:
         return {"err": "invalid option, try again"}
+
     return {}
 
 
