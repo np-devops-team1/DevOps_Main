@@ -326,11 +326,11 @@ def display_board(board_tracker, buildings_tracker, board_metadata):
 
 
 def build_building():
-    return False
+    print("build_building")
 
 
 def see_current_score():
-    return False
+    print("see_current_score")
 
 
 def display_game_menu(building_options):
