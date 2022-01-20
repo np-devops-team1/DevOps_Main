@@ -221,15 +221,8 @@ def ScoreAdjacentBuildings(plots):
 
 
 # module saves game data to txt file
-def SaveGameFunc():
-    f = open("dict.txt", "w")
-    f.write(str(plots))
-    f.close()
-    f2 = open("buildingCount.txt", "w")
-    bcount = buildCount
-    f2.write(str(bcount))
-    f2.close()
-    print("Game Saved!")
+def save_game():
+    return False
 
 
 def start_new_game():
@@ -330,6 +323,14 @@ def display_board(board_tracker, buildings_tracker, board_metadata):
                 print(" " + cell + " |", end="")
         print()
     print(row_divider)
+
+
+def build_building():
+    return False
+
+
+def see_current_score():
+    return False
 
 
 def display_game_menu(building_options):
