@@ -1,228 +1,5 @@
 
 import random
-import ast
-
-# for mapping locations to buildings
-plots = {"A1": "\t", "A2": "\t", "A3": "\t", "A4": "\t", "B1": "\t",
-         "B2": "\t", "B3": "\t", "B4": "\t", "C1": "\t", "C2": "\t",
-         "C3": "\t", "C4": "\t", "D1": "\t", "D2": "\t", "D3": "\t",
-         "D4": "\t", "Turn": "0", "lastPlace": ""}
-
-locationDic = {"A1": ["A2", "B1"],
-               "A2": ["A1", "A3", "B2"],
-               "A3": ["A2", "A4", "B3"],
-               "A4": ["A3", "B4"],
-               "B1": ["A1", "B2", "C1"],
-               "B2": ["A2", "B1", "B3", "C2"],
-               "B3": ["A3", "B2", "B4", "C3"],
-               "B4": ["A4", "B3", "C4"],
-               "C1": ["B1", "C2", "D1"],
-               "C2": ["B2", "C1", "C3", "D2"],
-               "C3": ["B3", "C2", "C4", "D3"],
-               "C4": ["B4", "C3", "D4"],
-               "D1": ["C1", "D2"],
-               "D2": ["C2", "D1", "D3"],
-               "D3": ["D2", "D4", "C3"],
-               "D4": ["D3", "C4"]}
-buildings = {0: "BCH", 1: "FAC", 2: "HSE", 3: "SHP", 4: "HWY"}
-hseScoreDic = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1}
-houseHis = []
-beachHis = []
-factoryScoreHis = []
-shopScoreHis = []
-highwayScoreHis = []
-
-buildCount = {"BCH": 8, "FAC": 8, "HSE": 8, "SHP": 8, "HWY": 8}
-lastPlace = ""  # stores last plot built upon
-
-
-# module displays game/city grid
-def CityMapFunc():
-    print("\t     A \t     B \t     C \t     D")
-    for i in range(4):
-        print("\t   +------------------------------+")
-        if i == 0:
-            print("\t", i + 1, "| ", plots["A1"], " | ", plots["B1"],
-                  " | ", plots["C1"], " | ", plots["D1"], " | ")
-        if i == 1:
-            print("\t", i + 1, "| ", plots["A2"], " | ", plots["B2"],
-                  " | ", plots["C2"], " | ", plots["D2"], " | ")
-        if i == 2:
-            print("\t", i + 1, "| ", plots["A3"], " | ", plots["B3"],
-                  " | ", plots["C3"], " | ", plots["D3"], " | ")
-        if i == 3:
-            print("\t", i + 1, "| ", plots["A4"], " | ", plots["B4"],
-                  " | ", plots["C4"], " | ", plots["D4"], " | ")
-
-    print("\t   +------------------------------+")
-
-
-def buildBuilding(option, plots):
-
-    position = input("Build where?")
-
-    if position not in plots.keys():
-        print("Invalid Position\n")
-        return False
-
-    if plots[position] != "\t":
-        print("Plot is occupied\n")
-        return False
-
-    if (int)(plots["Turn"]) != 0:
-        placeList = CheckAdjacency(plots["lastPlace"])
-        if position not in placeList:
-            print("You must build next to an existing building.")
-            return False
-
-    plots[position] = buildings[option]
-    # SubtractBuildingCount(option)
-    plots["lastPlace"] = position
-    plots["Turn"] = (int)(plots["Turn"]) + 1
-    CityMapFunc()
-    return plots
-
-
-# module returns a list of adjacent locations to the function parameter
-def CheckAdjacency(loc):
-    if(loc in locationDic.keys()):
-        return locationDic.get(loc)
-    else:
-        raise ValueError('Unexpected location')
-
-
-# Functions to calculate scores
-# calculate BCH score
-def calculateBCHscore(place):
-    placeSplit = list(place)
-    row = placeSplit[0]
-    # col = placeSplit[1]
-    rowLeft = list(plots.keys())[0][0]
-    rowRight = list(plots.keys())[-3][0]
-
-    if (row == rowLeft or row == rowRight):
-        return 3
-    else:
-        return 1
-
-
-# calculate factory score
-def calculateFACscore(factoryNumber):
-
-    if (isinstance(factoryNumber, int)):
-        if factoryNumber < 5:
-            factoryScoreHis = [factoryNumber for i in range(factoryNumber)]
-            return factoryNumber * factoryNumber
-        else:
-            factoryNumber = factoryNumber - 4
-            factoryScoreHis = [4 for i in range(4)]
-            factoryScoreHis.append([1 for i in range(factoryNumber)])
-            return factoryNumber
-    else:
-        raise TypeError('Invalid Data Type')
-
-
-def calculateSHPscore(adjacencylist, plots):
-    fcount = 0
-    bcount = 0
-    scount = 0
-    hcount = 0
-    shopScore = 0
-
-    for item in adjacencylist:
-        if plots[item] == "FAC":
-            if fcount == 1:
-                break
-            shopScore = shopScore + 1
-            fcount = fcount + 1
-        elif plots[item] == "BCH":
-            if bcount == 1:
-                break
-            shopScore = shopScore + 2
-            bcount = bcount + 1
-        elif plots[item] == "HSE":
-            if hcount == 1:
-                break
-            shopScore = shopScore + 1
-            hcount = hcount + 1
-        elif plots[item] == "SHP":
-            if scount == 1:
-                break
-            shopScore = shopScore + 1
-            scount = scount + 1
-    return shopScore
-
-
-def calculateHSEscore(plots, item):
-    if (plots[item] in hseScoreDic.keys()):
-        return hseScoreDic.get(plots[item])
-    else:
-        return 0
-
-
-def calculateHWYscore(adjacencylist, plots):
-    for item in adjacencylist:
-        if plots[item] == "HWY":
-            return 1
-            print("Highway Score + 1")
-    return 0
-
-
-def printScoreHis(history):
-    for i in range(len(history)):
-        print(history[i], end=" ")
-        if(i != len(history)):
-            print("+", end=" ")
-
-
-# function incorportes scoring logic for all types of buildings
-def ScoreAdjacentBuildings(plots):
-    TLScore, houseScore, beachScore, factoryScore, shopScore, highwayScore = 0
-    global houseHis, beachHis, factoryScoreHis, shopScoreHis, highwayScoreHis
-
-    factoryNumber = 0
-
-    for place, build in plots.items():
-        if build == "BCH":
-            score = calculateBCHscore(place)
-            beachScore = beachScore + score
-            beachHis.append(score)
-
-        if build == "FAC":
-            factoryNumber = factoryNumber + 1
-        if build == "HSE":
-            adjacencylist = CheckAdjacency(place)
-            for item in adjacencylist:
-                score = calculateHSEscore(plots, item)
-                houseScore = houseScore + score
-                houseHis.append(score)
-
-        if build == "SHP":
-            adjacencylist = CheckAdjacency(place)
-            score = calculateSHPscore(adjacencylist, plots)
-            shopScore = shopScore + score
-            shopScoreHis.append(score)
-        if build == "HWY":
-            adjacencylist = CheckAdjacency(place)
-            score = calculateHWYscore(adjacencylist, plots)
-            highwayScore = highwayScore + score
-            highwayScoreHis.append(score)
-
-    factoryScore = calculateFACscore(factoryNumber)
-
-    print("BCH : ", printScoreHis(beachHis) + " = " + beachScore)
-    print("FAC : ", printScoreHis(factoryScoreHis) + " = " + factoryScore)
-    print("HSE : ", printScoreHis(houseHis) + " = " + houseScore)
-    print("SHP : ", printScoreHis(shopScoreHis) + " = " + shopScore)
-    print("HWY : ", printScoreHis(highwayScoreHis) + " = " + highwayScore)
-
-    TLScore = beachScore + factoryScore + houseScore + shopScore + highwayScore
-    print("Total Score = ", TLScore)
-
-
-# module saves game data to txt file
-def save_game():
-    return False
 
 
 def start_new_game():
@@ -245,7 +22,36 @@ def start_new_game():
 
 
 def run_game(board_tracker, buildings_tracker, current_turn, board_metadata):
-    return
+    proceed_next_turn = True
+    while current_turn < board_metadata["total_turns"]:
+        if proceed_next_turn is True:
+            current_turn += 1
+            building_options = get_random_buildings(buildings_tracker)
+
+        print("\nTurn", current_turn)
+        display_board(board_tracker, buildings_tracker, board_metadata)
+        display_game_menu(building_options)
+        return_values = game_menu_option_selection(board_tracker, buildings_tracker, building_options, current_turn, board_metadata)
+
+        if "exit" in return_values:
+            if return_values["exit"] is True:
+                return {}
+
+        if "err" in return_values:
+            print(return_values["err"])
+
+        if "updated_board_tracker" in return_values:
+            board_tracker = return_values["updated_board_tracker"]
+
+        if "updated_buildings_tracker" in return_values:
+            buildings_tracker = return_values["updated_buildings_tracker"]
+
+        if return_values["proceed_next_turn"] is True:
+            proceed_next_turn = True
+        else:
+            proceed_next_turn = False
+
+    return {}
 
 
 def city_size_selection(city_size_restrictions):
@@ -311,26 +117,37 @@ def display_board(board_tracker, buildings_tracker, board_metadata):
     print("   ", end="")
     for col in range(size):
         print("  " + letters[col] + "   ", end="")
-    print(" ", buildings_tracker)
+    print("   Remaining buildings")
+
+    buildings_index_count = 0
 
     for row_index, row_value in enumerate(board_tracker, start=1):
-        print(row_divider)
+        if row_index == 1:
+            print(row_divider + "   -------------------")
+        elif buildings_index_count < len(buildings_tracker):
+            building = list(buildings_tracker)[buildings_index_count]
+            building_count = buildings_tracker[building]
+            print("{}   {}: {}".format(row_divider, building, building_count))
+            buildings_index_count += 1
+        else:
+            print(row_divider)
+
         print(" {}|".format(row_index), end="")
         for cell in row_value:
             if cell == "":
                 print("     |", end="")
             else:
                 print(" " + cell + " |", end="")
-        print()
+
+        if buildings_index_count < len(buildings_tracker):
+            building = list(buildings_tracker)[buildings_index_count]
+            building_count = buildings_tracker[building]
+            print("   {}: {}".format(building, building_count))
+            buildings_index_count += 1
+        else:
+            print()
+
     print(row_divider)
-
-
-def build_building():
-    print("build_building")
-
-
-def see_current_score():
-    print("see_current_score")
 
 
 def display_game_menu(building_options):
@@ -364,26 +181,23 @@ def exit_game_menu():
     return {"exit": True}
 
 
-def load_saved_game():
-    try:
-        with open("dict.txt") as f:
-            data = f.read()
-        loadedPlots = ast.literal_eval(data)
-        print(plots)
+def build_building(board_tracker, buildings_tracker, building, current_turn, board_metadata):
+    print("build_building")
+    return {"proceed_next_turn": False}
 
-        with open("buildingCount.txt") as file:
-            dataBuild = file.read()
-        loadedBuildings = ast.literal_eval(dataBuild)
-        return loadedPlots, loadedBuildings, True
-    except FileNotFoundError:
-        print("File is not found")
-        return plots, buildCount, False
-    except ValueError:
-        print("Loaded Data is incorrect")
-        return plots, buildCount, False
-    except SyntaxError:
-        print("Loaded Data is incorrect")
-        return plots, buildCount, False
+
+def see_current_score():
+    print("see_current_score")
+    return {"proceed_next_turn": False}
+
+
+def save_game():
+    return {"proceed_next_turn": False}
+
+
+def load_saved_game():
+    print("load saved game")
+    return {}
 
 
 def choose_building_pool():
