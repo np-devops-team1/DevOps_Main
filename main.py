@@ -340,17 +340,36 @@ def display_board(board_tracker, buildings_tracker, board_metadata):
     print("   ", end="")
     for col in range(size):
         print("  " + letters[col] + "   ", end="")
-    print(" ", buildings_tracker)
+    print("   Remaining buildings")
+
+    buildings_index_count = 0
 
     for row_index, row_value in enumerate(board_tracker, start=1):
-        print(row_divider)
+        if row_index == 1:
+            print(row_divider + "   -------------------")
+        elif buildings_index_count < len(buildings_tracker):
+            building = list(buildings_tracker)[buildings_index_count]
+            building_count = buildings_tracker[building]
+            print("{}   {}: {}".format(row_divider, building, building_count))
+            buildings_index_count += 1
+        else:
+            print(row_divider)
+
         print(" {}|".format(row_index), end="")
         for cell in row_value:
             if cell == "":
                 print("     |", end="")
             else:
                 print(" " + cell + " |", end="")
-        print()
+        
+        if buildings_index_count < len(buildings_tracker):
+            building = list(buildings_tracker)[buildings_index_count]
+            building_count = buildings_tracker[building]
+            print("   {}: {}".format(building, building_count))
+            buildings_index_count += 1
+        else:
+            print()
+
     print(row_divider)
 
 
