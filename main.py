@@ -245,7 +245,36 @@ def start_new_game():
 
 
 def run_game(board_tracker, buildings_tracker, current_turn, board_metadata):
-    return
+    proceed_next_turn = True
+    while current_turn < board_metadata["total_turns"]:
+        if proceed_next_turn is True:
+            current_turn += 1
+            building_options = get_random_buildings(buildings_tracker)
+
+        print("\nTurn", current_turn)
+        display_board(board_tracker, buildings_tracker, board_metadata)
+        display_game_menu(building_options)
+        return_values = game_menu_option_selection(board_tracker, buildings_tracker, building_options, current_turn, board_metadata)
+
+        if "exit" in return_values:
+            if return_values["exit"] is True:
+                return {}
+
+        if "err" in return_values:
+            print(return_values["err"])
+
+        if "updated_board_tracker" in return_values:
+            board_tracker = return_values["updated_board_tracker"]
+
+        if "updated_buildings_tracker" in return_values:
+            buildings_tracker = return_values["updated_buildings_tracker"]
+
+        if return_values["proceed_next_turn"] is True:
+            proceed_next_turn = True
+        else:
+            proceed_next_turn = False
+
+    return {}
 
 
 def city_size_selection(city_size_restrictions):
