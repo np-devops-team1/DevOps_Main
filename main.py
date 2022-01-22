@@ -138,7 +138,7 @@ def display_board(board_tracker, buildings_tracker, board_metadata):
                 print("     |", end="")
             else:
                 print(" " + cell + " |", end="")
-        
+
         if buildings_index_count < len(buildings_tracker):
             building = list(buildings_tracker)[buildings_index_count]
             building_count = buildings_tracker[building]
