@@ -1,5 +1,6 @@
 
 import random
+import sys
 
 
 def start_new_game():
@@ -267,6 +268,8 @@ def master_loop():
         if "bp" in return_values:
             global building_pool
             building_pool = return_values["bp"]
+
+    sys.exit()
 
 
 if __name__ == "__main__":
