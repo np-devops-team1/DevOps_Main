@@ -17,7 +17,7 @@ jobs:
 
       - name: Install Libraries
         run: |
-          pip install pytest pytest-mock
+          pip install pytest pytest-mock pytest-assume
 
       - name: Checkout Own Repo
         uses: actions/checkout@v2
