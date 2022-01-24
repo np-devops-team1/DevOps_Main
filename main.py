@@ -187,6 +187,13 @@ def build_building(board_tracker, buildings_tracker, building, current_turn, boa
     return {"proceed_next_turn": False}
 
 
+def check_location_occupied(board_tracker, building_coordinates):
+    if board_tracker[building_coordinates["row"]][building_coordinates["col"]] != "":
+        return True
+    else:
+        return False
+
+
 def see_current_score():
     print("see_current_score")
     return {"proceed_next_turn": False}
