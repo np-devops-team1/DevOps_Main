@@ -194,6 +194,26 @@ def check_location_occupied(board_tracker, building_coordinates):
         return False
 
 
+def check_adjacent_location_occupied(board_tracker, building_coordinates):
+    if building_coordinates["row"] > 0:
+        if board_tracker[building_coordinates["row"] - 1][building_coordinates["col"]] != "": # Check top
+            return True
+
+    if building_coordinates["row"] < len(board_tracker) - 1:
+        if board_tracker[building_coordinates["row"] + 1][building_coordinates["col"]] != "": # Check bottom
+            return True
+
+    if building_coordinates["col"] > 0:
+        if board_tracker[building_coordinates["row"]][building_coordinates["col"] - 1] != "": # Check left
+            return True
+
+    if building_coordinates["col"] < len(board_tracker) - 1:
+        if board_tracker[building_coordinates["row"]][building_coordinates["col"] + 1] != "": # Check right
+            return True
+
+    return False
+
+
 def see_current_score():
     print("see_current_score")
     return {"proceed_next_turn": False}
