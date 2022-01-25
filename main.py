@@ -248,6 +248,11 @@ def add_building_to_board(board_tracker, building, building_coordinates):
     return board_tracker
 
 
+def update_buildings_tracker(buildings_tracker, building):
+    buildings_tracker[building] -= 1
+    return buildings_tracker
+
+
 def see_current_score():
     print("see_current_score")
     return {"proceed_next_turn": False}
