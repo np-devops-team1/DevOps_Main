@@ -187,6 +187,35 @@ def build_building(board_tracker, buildings_tracker, building, current_turn, boa
     return {"proceed_next_turn": False}
 
 
+def select_building_location(board_tracker, current_turn, board_metadata):
+    letters = board_metadata["letter_input_pairs"]
+
+    while True:
+        user_input = input("Build where? ")
+        if user_input == "0":
+            return {"exit": True}
+
+        building_location = {"col": user_input[0], "row": user_input[1:]}
+
+        if building_location["col"] in letters and building_location["row"] in [str(i).zfill(0) for i in range(1, len(letters) + 1)]:
+            building_coordinates = {}
+            building_coordinates["col"] = letters[building_location["col"]]
+            building_coordinates["row"] = int(building_location["row"]) - 1
+
+            if current_turn == 1:
+                return {"building_coordinates": building_coordinates}
+            else:
+                if check_location_occupied(board_tracker, building_coordinates) is False:
+                    if check_adjacent_location_occupied(board_tracker, building_coordinates) is True:
+                        return {"building_coordinates": building_coordinates}
+                    else:
+                        print("You must build next to an existing building")
+                else:
+                    print("You must build on an empty location")
+        else:
+            print("Location not found")
+
+
 def check_location_occupied(board_tracker, building_coordinates):
     if board_tracker[building_coordinates["row"]][building_coordinates["col"]] != "":
         return True
@@ -196,19 +225,19 @@ def check_location_occupied(board_tracker, building_coordinates):
 
 def check_adjacent_location_occupied(board_tracker, building_coordinates):
     if building_coordinates["row"] > 0:
-        if board_tracker[building_coordinates["row"] - 1][building_coordinates["col"]] != "": # Check top
+        if board_tracker[building_coordinates["row"] - 1][building_coordinates["col"]] != "":  # Check top
             return True
 
     if building_coordinates["row"] < len(board_tracker) - 1:
-        if board_tracker[building_coordinates["row"] + 1][building_coordinates["col"]] != "": # Check bottom
+        if board_tracker[building_coordinates["row"] + 1][building_coordinates["col"]] != "":  # Check bottom
             return True
 
     if building_coordinates["col"] > 0:
-        if board_tracker[building_coordinates["row"]][building_coordinates["col"] - 1] != "": # Check left
+        if board_tracker[building_coordinates["row"]][building_coordinates["col"] - 1] != "":  # Check left
             return True
 
     if building_coordinates["col"] < len(board_tracker) - 1:
-        if board_tracker[building_coordinates["row"]][building_coordinates["col"] + 1] != "": # Check right
+        if board_tracker[building_coordinates["row"]][building_coordinates["col"] + 1] != "":  # Check right
             return True
 
     return False
