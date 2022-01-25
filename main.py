@@ -243,6 +243,11 @@ def check_adjacent_location_occupied(board_tracker, building_coordinates):
     return False
 
 
+def add_building_to_board(board_tracker, building, building_coordinates):
+    board_tracker[building_coordinates["row"]][building_coordinates["col"]] = building
+    return board_tracker
+
+
 def see_current_score():
     print("see_current_score")
     return {"proceed_next_turn": False}
