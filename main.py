@@ -183,8 +183,21 @@ def exit_game_menu():
 
 
 def build_building(board_tracker, buildings_tracker, building, current_turn, board_metadata):
-    print("build_building")
-    return {"proceed_next_turn": False}
+    return_values = select_building_location(board_tracker, current_turn, board_metadata)
+
+    if "exit" in return_values:
+        if return_values["exit"] is True:
+            return {"proceed_next_turn": False}
+
+    if "err" in return_values:
+        return {"proceed_next_turn": False, "err": return_values["err"]}
+
+    if "building_coordinates" in return_values:
+        updated_board_tracker = add_building_to_board(board_tracker, building, return_values["building_coordinates"])
+        updated_buildings_tracker = update_buildings_tracker(buildings_tracker, building)
+        return {"proceed_next_turn": True, "updated_board_tracker": updated_board_tracker, "updated_buildings_tracker": updated_buildings_tracker}
+
+    return {"proceed_next_turn": False, "err": "Error in selecting building location"}
 
 
 def select_building_location(board_tracker, current_turn, board_metadata):
