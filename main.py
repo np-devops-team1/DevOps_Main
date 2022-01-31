@@ -281,7 +281,29 @@ def load_saved_game():
 
 
 def choose_building_pool():
-    return{}
+    while True:
+        print("\nCurrent building pool")
+        print(building_pool)
+        print("1. Change building pool")
+        print('0. Exit')
+
+        user_input = input("Your choice? ")
+        if user_input == "0":
+            return {}
+        elif user_input == "1":
+            buildings = ["BCH", "FAC", "HSE", "SHP", "HWY", "PRK", "MON"]
+            print("\n", buildings)
+
+            user_pool_input = input("Choose 5 different buildings (sep with space): ")
+            new_pool = user_pool_input.split(" ")
+
+            pool_valid = validate_building_pool_selection(buildings, new_pool)
+
+            if pool_valid:
+                print("Building pool changed successfully")
+                return {"bp": new_pool}
+        else:
+            print("Invalid option, try again")
 
 
 def validate_building_pool_selection(buildings, new_pool):
