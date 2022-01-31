@@ -284,6 +284,23 @@ def choose_building_pool():
     return{}
 
 
+def validate_building_pool_selection(buildings, new_pool):
+    for b in new_pool:
+        if b not in buildings:
+            print("Invalid building entered, try again")
+            return False
+
+    if len(new_pool) != len(set(new_pool)):
+        print("Duplicate building entered, try again")
+        return False
+
+    if len(new_pool) != 5:
+        print("Please enter exactly 5 buildings, try again")
+        return False
+
+    return True
+
+
 def show_high_scores():
     return {}
 
