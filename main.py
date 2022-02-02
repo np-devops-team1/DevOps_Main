@@ -330,7 +330,8 @@ def calculate_shp_score(buildings_tracker):
     return shp_score, all_shp_score
 
 
-hse_scoring_builts = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1, "HWY": 0, "MON": 1, "PRK": 1, "" : 0}
+hse_scoring_builts = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1, "HWY": 0, "MON": 1, "PRK": 1, "": 0}
+
 
 def calculate_hse_score(buildings_tracker):
     hse_score = 0
@@ -345,13 +346,11 @@ def calculate_hse_score(buildings_tracker):
                 adjacent_building = get_adjacent_buildings(
                     building_row, building_column, buildings_tracker)
 
-                
                 for building in adjacent_building:
                     score = score + hse_scoring_builts.get(building)
                 all_hse_score.append(score)
                 hse_score = hse_score + score
     return hse_score, all_hse_score
-
 
 
 def calculate_hwy_score(buildings_tracker):
@@ -379,13 +378,15 @@ def calculate_hwy_score(buildings_tracker):
                 all_hwy_score.append(score)
     return hwy_score, all_hwy_score
 
+
 visited = []  # Set to keep track of visited nodes of PRK
 global_visited = []
-prk_score_dic = {"1": 1, "2": 3, "3": 8, "4": 16, "5": 22, "6":23, "7":24, "8":25}
+prk_score_dic = {"1": 1, "2": 3, "3": 8, "4": 16, "5": 22, "6": 23, "7": 24, "8": 25}
+
+
 def calculate_prk_score(buildings_tracker):
     prk_score = 0
     prk_history = []
-    size = 0
 
     for building_row in range(0, len(buildings_tracker)):
         for building_column in range(0, len(buildings_tracker[building_row])):
@@ -400,6 +401,7 @@ def calculate_prk_score(buildings_tracker):
 
     return prk_score, prk_history
 
+
 def dfs(visited, graph, node):  # function for dfs
     if node not in visited:
         visited.append(node)
@@ -407,9 +409,8 @@ def dfs(visited, graph, node):  # function for dfs
         for neighbour in get_adjacent_buildings_and_position(node[0], node[1], graph):
             if neighbour[0] == "PRK":
                 dfs(visited, graph, [neighbour[1], neighbour[2]])
-            
+
     return len(visited)
-    
 
 
 def calculate_mon_score(buildings_tracker):
@@ -423,7 +424,7 @@ def calculate_mon_score(buildings_tracker):
     for i in cords:
         if buildings_tracker[i[0]][i[1]] == "MON":
             mon_corner = mon_corner + 1
-    
+
     if mon_corner > 2:
         corner_score_system = 4
         inside_score_system = 4
@@ -441,15 +442,14 @@ def calculate_mon_score(buildings_tracker):
                     mon_history.append(inside_score_system)
     return mon_score, mon_history
 
-                
+
 def get_corner_coordinates(buildings_tracker):
     cords = []
-    cords.append([0,0])
-    cords.append([0,len(buildings_tracker[0])-1])
-    cords.append([len(buildings_tracker[0])-1, 0])
-    cords.append([len(buildings_tracker[0])-1,len(buildings_tracker[0])-1])
+    cords.append([0, 0])
+    cords.append([0, len(buildings_tracker[0]) - 1])
+    cords.append([len(buildings_tracker[0]) - 1, 0])
+    cords.append([len(buildings_tracker[0]) - 1, len(buildings_tracker[0]) - 1])
     return cords
-
 
 
 def get_adjacent_buildings(building_row, pos, buildings_tracker):
