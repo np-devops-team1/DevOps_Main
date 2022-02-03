@@ -171,6 +171,8 @@ def game_menu_option_selection(board_tracker, buildings_tracker, building_option
     if user_input in list(main_menu_options.keys()):
         if user_input == "1" or user_input == "2":
             return main_menu_options[user_input](board_tracker, buildings_tracker, building_options[int(user_input) - 1], current_turn, board_metadata)
+        elif user_input == "3":
+            return main_menu_options[user_input](board_tracker)
         else:
             return main_menu_options[user_input]()
 
@@ -535,10 +537,12 @@ def see_current_score(buildings_tracker):
         shp_score + hwy_score + prk_score + mon_score
     print("Total Score = ", TLScore)
 
+    return {"proceed_next_turn": False}
+
 
 def print_score_all(score_all):
     if (len(score_all) == 0):
-        print("0")
+        print("0", end=" ")
 
     for i in range(len(score_all)):
         print(score_all[i], end=" ")
