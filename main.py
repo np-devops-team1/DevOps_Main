@@ -266,6 +266,234 @@ def update_buildings_tracker(buildings_tracker, building):
     return buildings_tracker
 
 
+def calculate_bch_score(buildings_tracker):
+    bch_score = 0
+    all_bch_score = []
+    for building_row in buildings_tracker:
+        for building_column in range(0, len(building_row)):
+            if building_row[building_column] == "BCH":
+                if building_column == 0 or building_column == len(building_row) - 1:
+                    bch_score = bch_score + 3
+                    all_bch_score.append(3)
+                else:
+                    bch_score = bch_score + 1
+                    all_bch_score.append(1)
+
+    return bch_score, all_bch_score
+
+
+def calculate_fac_score(buildings_tracker):
+    fac_score = 0
+    no_of_fac = 0
+    all_fac_score = []
+    for building_row in buildings_tracker:
+        for building_column in range(0, len(building_row)):
+            if building_row[building_column] == "FAC":
+                no_of_fac = no_of_fac + 1
+
+    if no_of_fac < 5:
+        all_fac_score = [no_of_fac for i in range(no_of_fac)]
+        fac_score = no_of_fac * no_of_fac
+    else:
+        no_of_fac = no_of_fac - 4
+        all_fac_score = [4 for i in range(4)]
+        all_fac_score.append([1 for i in range(no_of_fac)])
+        fac_score = no_of_fac + (4 * 4)
+    return fac_score, all_fac_score
+
+
+def calculate_shp_score(buildings_tracker):
+    shp_score = 0
+    all_shp_score = []
+
+    for building_row in range(0, len(buildings_tracker)):
+        for building_column in range(0, len(buildings_tracker[building_row])):
+            build = buildings_tracker[building_row][building_column]
+
+            if build == "SHP":
+                # get adjacent building of a plot
+
+                score = 0
+                buildingCounter = {"FAC": 0, "BCH": 0,
+                                   "SHP": 0, "HSE": 0, "HWY": 0, "PRK": 0, "MON": 0}
+                adjacent_building = get_adjacent_buildings(
+                    building_row, building_column, buildings_tracker)
+
+                for building in adjacent_building:
+                    if building in buildingCounter.keys():
+                        if buildingCounter.get(building) == 0:
+                            score = score + 1
+                            buildingCounter[building] = 1
+
+                shp_score = shp_score + score
+                all_shp_score.append(score)
+    return shp_score, all_shp_score
+
+
+hse_scoring_builts = {"FAC": 1, "BCH": 2, "HSE": 1, "SHP": 1, "HWY": 0, "MON": 1, "PRK": 1, "": 0}
+
+
+def calculate_hse_score(buildings_tracker):
+    hse_score = 0
+    all_hse_score = []
+
+    for building_row in range(0, len(buildings_tracker)):
+        for building_column in range(0, len(buildings_tracker[building_row])):
+            build = buildings_tracker[building_row][building_column]
+
+            if build == "HSE":
+                score = 0
+                adjacent_building = get_adjacent_buildings(
+                    building_row, building_column, buildings_tracker)
+
+                for building in adjacent_building:
+                    score = score + hse_scoring_builts.get(building)
+                all_hse_score.append(score)
+                hse_score = hse_score + score
+    return hse_score, all_hse_score
+
+
+def calculate_hwy_score(buildings_tracker):
+    hwy_score = 0
+    all_hwy_score = []
+
+    for building_row in range(0, len(buildings_tracker)):
+        for building_column in range(0, len(buildings_tracker[building_row])):
+            build = buildings_tracker[building_row][building_column]
+
+            if build == "HWY":
+                score = 0
+                # Find the number of rows
+                for i in range(building_column, len(buildings_tracker[building_row])):
+                    if buildings_tracker[building_row][i] == "HWY":
+                        score = score + 1
+                    else:
+                        break
+                for i in reversed(range(0, building_column)):
+                    if buildings_tracker[building_row][i] == "HWY":
+                        score = score + 1
+                    else:
+                        break
+                hwy_score = hwy_score + score
+                all_hwy_score.append(score)
+    return hwy_score, all_hwy_score
+
+
+visited = []  # Set to keep track of visited nodes of PRK
+global_visited = []
+prk_score_dic = {"1": 1, "2": 3, "3": 8, "4": 16, "5": 22, "6": 23, "7": 24, "8": 25}
+
+
+def calculate_prk_score(buildings_tracker):
+    prk_score = 0
+    prk_history = []
+
+    for building_row in range(0, len(buildings_tracker)):
+        for building_column in range(0, len(buildings_tracker[building_row])):
+            build = buildings_tracker[building_row][building_column]
+
+            if build == "PRK":
+                if ([building_row, building_column]) not in global_visited:
+                    # Find the number of rows
+                    visited = []
+                    prk_score = prk_score + prk_score_dic.get(str(dfs(visited, buildings_tracker, [building_row, building_column])))
+                    prk_history.append(prk_score)
+
+    return prk_score, prk_history
+
+
+def dfs(visited, graph, node):  # function for dfs
+    if node not in visited:
+        visited.append(node)
+        global_visited.append(node)
+        for neighbour in get_adjacent_buildings_and_position(node[0], node[1], graph):
+            if neighbour[0] == "PRK":
+                dfs(visited, graph, [neighbour[1], neighbour[2]])
+
+    return len(visited)
+
+
+def calculate_mon_score(buildings_tracker):
+    mon_score = 0
+    mon_history = []
+    mon_corner = 0
+    corner_score_system = 2
+    inside_score_system = 1
+    cords = get_corner_coordinates(buildings_tracker)
+
+    for i in cords:
+        if buildings_tracker[i[0]][i[1]] == "MON":
+            mon_corner = mon_corner + 1
+
+    if mon_corner > 2:
+        corner_score_system = 4
+        inside_score_system = 4
+
+    for building_row in range(0, len(buildings_tracker)):
+        for building_column in range(0, len(buildings_tracker[building_row])):
+            build = buildings_tracker[building_row][building_column]
+            if build == "MON":
+                if [building_row, building_column] in cords:
+                    mon_score = mon_score + corner_score_system
+                    mon_history.append(corner_score_system)
+
+                else:
+                    mon_score = mon_score + inside_score_system
+                    mon_history.append(inside_score_system)
+    return mon_score, mon_history
+
+
+def get_corner_coordinates(buildings_tracker):
+    cords = []
+    cords.append([0, 0])
+    cords.append([0, len(buildings_tracker[0]) - 1])
+    cords.append([len(buildings_tracker[0]) - 1, 0])
+    cords.append([len(buildings_tracker[0]) - 1, len(buildings_tracker[0]) - 1])
+    return cords
+
+
+def get_adjacent_buildings(building_row, pos, buildings_tracker):
+    building = []
+    # get up
+    if building_row > 0:
+        building.append(buildings_tracker[building_row - 1][pos])
+
+    # get down
+    if building_row < len(buildings_tracker) - 1:
+        building.append(buildings_tracker[building_row + 1][pos])
+
+    # get right
+    if pos < len(buildings_tracker[building_row]) - 1:
+        building.append(buildings_tracker[building_row][pos + 1])
+
+    # get left
+    if pos > 0:
+        building.append(buildings_tracker[building_row][pos - 1])
+
+    return building
+
+
+def get_adjacent_buildings_and_position(building_row, pos, buildings_tracker):
+    building = []
+    # get up
+    if building_row > 0:
+        building.append([buildings_tracker[building_row - 1][pos], building_row - 1, pos])
+
+    # get down
+    if building_row < len(buildings_tracker) - 1:
+        building.append([buildings_tracker[building_row + 1][pos], building_row + 1, pos])
+
+    # get right
+    if pos < len(buildings_tracker[building_row]) - 1:
+        building.append([buildings_tracker[building_row][pos + 1], building_row, pos + 1])
+
+    # get left
+    if pos > 0:
+        building.append([buildings_tracker[building_row][pos - 1], building_row, pos - 1])
+
+    return building
+
+
 def see_current_score():
     print("see_current_score")
     return {"proceed_next_turn": False}
