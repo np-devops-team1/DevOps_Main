@@ -494,9 +494,56 @@ def get_adjacent_buildings_and_position(building_row, pos, buildings_tracker):
     return building
 
 
-def see_current_score():
-    print("see_current_score")
-    return {"proceed_next_turn": False}
+def see_current_score(buildings_tracker):
+    bch_score, bch_score_all = calculate_bch_score(buildings_tracker)
+    fac_score, fac_score_all = calculate_fac_score(buildings_tracker)
+    hse_score, hse_score_all = calculate_hse_score(buildings_tracker)
+    hwy_score, hwy_score_all = calculate_hwy_score(buildings_tracker)
+    shp_score, shp_score_all = calculate_shp_score(buildings_tracker)
+    prk_score, prk_score_all = calculate_prk_score(buildings_tracker)
+    mon_score, mon_score_all = calculate_mon_score(buildings_tracker)
+
+    print("BCH : ", end="")
+    print_score_all(bch_score_all)
+    print("= " + str(bch_score))
+
+    print("FAC : ", end="")
+    print_score_all(fac_score_all)
+    print("= " + str(fac_score))
+
+    print("HSE : ", end="")
+    print_score_all(hse_score_all)
+    print("= " + str(hse_score))
+
+    print("SHP : ", end="")
+    print_score_all(shp_score_all)
+    print("= " + str(shp_score))
+
+    print("HWY : ", end="")
+    print_score_all(hwy_score_all)
+    print("= " + str(hwy_score))
+
+    print("PRK : ", end="")
+    print_score_all(prk_score_all)
+    print("= " + str(prk_score))
+
+    print("MON : ", end="")
+    print_score_all(mon_score_all)
+    print("= " + str(mon_score))
+
+    TLScore = bch_score + fac_score + hse_score + \
+        shp_score + hwy_score + prk_score + mon_score
+    print("Total Score = ", TLScore)
+
+
+def print_score_all(score_all):
+    if (len(score_all) == 0):
+        print("0")
+
+    for i in range(len(score_all)):
+        print(score_all[i], end=" ")
+        if(i != len(score_all) - 1):
+            print("+", end=" ")
 
 
 def save_game():
