@@ -662,6 +662,9 @@ def main_menu_option_selection():
             if return_values["exit"] is True:
                 return {"exit": True}
 
+        if "err" in return_values:
+            return {"err": return_values["err"]}
+
         if "bp" in return_values:
             return {"bp": return_values["bp"]}
 
