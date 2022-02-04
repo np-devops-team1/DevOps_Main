@@ -174,6 +174,8 @@ def game_menu_option_selection(board_tracker, buildings_tracker, building_option
             return main_menu_options[user_input](board_tracker, buildings_tracker, building_options[int(user_input) - 1], current_turn, board_metadata)
         elif user_input == "3":
             return main_menu_options[user_input](board_tracker)
+        elif user_input == "4":
+            return main_menu_options[user_input](board_tracker, buildings_tracker, current_turn, board_metadata)
         else:
             return main_menu_options[user_input]()
 
