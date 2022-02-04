@@ -550,7 +550,14 @@ def print_score_all(score_all):
             print("+", end=" ")
 
 
-def save_game():
+def save_game(board_tracker, buildings_tracker, current_turn, board_metadata):
+    game_data = {"board_tracker": board_tracker, "buildings_tracker": buildings_tracker, "current_turn": current_turn, "board_metadata": board_metadata}
+
+    save_data_file = open("save_data.txt", "w")
+    save_data_file.write(str(game_data))
+    save_data_file.close()
+
+    print("\nGame saved!")
     return {"proceed_next_turn": False}
 
 
