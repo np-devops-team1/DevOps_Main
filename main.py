@@ -1,6 +1,7 @@
-
 import random
 import sys
+import ast
+from os.path import exists
 
 
 def start_new_game():
@@ -562,7 +563,27 @@ def save_game(board_tracker, buildings_tracker, current_turn, board_metadata):
 
 
 def load_saved_game():
-    print("load saved game")
+    if exists("save_data.txt"):
+        save_data_file = open("save_data.txt", "r")
+    else:
+        return {"err": "No saved game detected"}
+
+    file_data = save_data_file.read()
+    if file_data == "":
+        return {"err": "No saved game detected"}
+
+    try:
+        game_data = ast.literal_eval(file_data)
+        save_data_file.close()
+    except Exception as err:
+        return {"err": "error loading game: " + str(err)}
+
+    if type(game_data) is dict and game_data.keys() >= {"board_tracker", "buildings_tracker", "current_turn", "board_metadata"}:
+        print("\nSaved game loaded!")
+        run_game(game_data["board_tracker"], game_data["buildings_tracker"], game_data["current_turn"] - 1, game_data["board_metadata"])
+    else:
+        return {"err": "error loading game"}
+
     return {}
 
 
