@@ -1,6 +1,7 @@
-
 import random
 import sys
+import ast
+from os.path import exists
 
 
 def start_new_game():
@@ -173,6 +174,8 @@ def game_menu_option_selection(board_tracker, buildings_tracker, building_option
             return main_menu_options[user_input](board_tracker, buildings_tracker, building_options[int(user_input) - 1], current_turn, board_metadata)
         elif user_input == "3":
             return main_menu_options[user_input](board_tracker)
+        elif user_input == "4":
+            return main_menu_options[user_input](board_tracker, buildings_tracker, current_turn, board_metadata)
         else:
             return main_menu_options[user_input]()
 
@@ -550,12 +553,39 @@ def print_score_all(score_all):
             print("+", end=" ")
 
 
-def save_game():
+def save_game(board_tracker, buildings_tracker, current_turn, board_metadata):
+    game_data = {"board_tracker": board_tracker, "buildings_tracker": buildings_tracker, "current_turn": current_turn, "board_metadata": board_metadata}
+
+    save_data_file = open("save_data.txt", "w")
+    save_data_file.write(str(game_data))
+    save_data_file.close()
+
+    print("\nGame saved!")
     return {"proceed_next_turn": False}
 
 
 def load_saved_game():
-    print("load saved game")
+    if exists("save_data.txt"):
+        save_data_file = open("save_data.txt", "r")
+    else:
+        return {"err": "No saved game detected"}
+
+    file_data = save_data_file.read()
+    if file_data == "":
+        return {"err": "No saved game detected"}
+
+    try:
+        game_data = ast.literal_eval(file_data)
+        save_data_file.close()
+    except Exception as err:
+        return {"err": "error loading game: " + str(err)}
+
+    if type(game_data) is dict and game_data.keys() >= {"board_tracker", "buildings_tracker", "current_turn", "board_metadata"}:
+        print("\nSaved game loaded!")
+        run_game(game_data["board_tracker"], game_data["buildings_tracker"], game_data["current_turn"] - 1, game_data["board_metadata"])
+    else:
+        return {"err": "error loading game"}
+
     return {}
 
 
@@ -631,6 +661,9 @@ def main_menu_option_selection():
         if "exit" in return_values:
             if return_values["exit"] is True:
                 return {"exit": True}
+
+        if "err" in return_values:
+            return {"err": return_values["err"]}
 
         if "bp" in return_values:
             return {"bp": return_values["bp"]}
