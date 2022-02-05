@@ -632,6 +632,24 @@ def validate_building_pool_selection(buildings, new_pool):
     return True
 
 
+def load_high_scores():
+    if exists("high_score_data.txt"):
+        high_score_data_file = open("high_score_data.txt", "r")
+    else:
+        return {"err": "No high score detected"}
+
+    file_data = high_score_data_file.read()
+    if file_data == "":
+        return {"err": "No high score detected"}
+
+    try:
+        high_score_data = ast.literal_eval(file_data)
+        high_score_data_file.close()
+        return {"data": high_score_data}
+    except Exception as err:
+        return {"err": "error loading high score: " + str(err)}
+
+
 def show_high_scores():
     return {}
 
