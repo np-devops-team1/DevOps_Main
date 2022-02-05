@@ -650,6 +650,54 @@ def load_high_scores():
         return {"err": "error loading high score: " + str(err)}
 
 
+def register_high_score(score):
+    return_values = load_high_scores()
+    high_score_data_file = open("high_score_data.txt", "w")
+
+    if "err" in return_values:
+        if return_values["err"] == "No high score detected":
+            print("Congratulations! You made the high score board at position 1!")
+            name = input("Please enter you name (max 20 chars): ")
+
+            high_score_data = [{"name": name, "score": score}]
+            high_score_data_file.write(str(high_score_data))
+            high_score_data_file.close()
+
+            show_high_scores()
+
+    elif "data" in return_values:
+        high_score_data = return_values["data"]
+
+        for index, score_entry in enumerate(high_score_data):
+            if score > score_entry["score"]:
+                print("Congratulations! You made the high score board at position {}!".format(index + 1))
+                name = input("Please enter you name (max 20 chars): ")
+                high_score_data.insert(index, {"name": name, "score": score})
+
+                if len(high_score_data) > 10:
+                    high_score_data.pop()
+
+                high_score_data_file.write(str(high_score_data))
+                high_score_data_file.close()
+
+                show_high_scores()
+                break
+
+            elif index + 1 == len(high_score_data) and len(high_score_data) < 10:
+                print("Congratulations! You made the high score board at position {}!".format(index + 2))
+                name = input("Please enter you name (max 20 chars): ")
+                high_score_data.insert(index + 1, {"name": name, "score": score})
+
+                high_score_data_file.write(str(high_score_data))
+                high_score_data_file.close()
+
+                show_high_scores()
+                break
+
+    else:
+        high_score_data_file.close()
+
+
 def show_high_scores():
     return_values = load_high_scores()
     if "err" in return_values:
