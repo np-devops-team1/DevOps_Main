@@ -723,10 +723,6 @@ def show_high_scores():
     return {}
 
 
-def show_high_scores():
-    return {}
-
-
 def display_main_menu():
     print("\nWelcome, mayor of Simp City!")
     print("------------------------------")
