@@ -651,6 +651,25 @@ def load_high_scores():
 
 
 def show_high_scores():
+    return_values = load_high_scores()
+    if "err" in return_values:
+        print(return_values["err"])
+
+    elif "data" in return_values:
+        print("\n--------- HIGH SCORES ---------")
+        print("Pos Player                Score")
+        print("--- ------                -----")
+
+        high_score_data = return_values["data"]
+        for position, score_entry in enumerate(high_score_data, start=1):
+            print("{:>2}. {:<21} {:>5}".format(position, score_entry["name"], score_entry["score"]))
+
+        print("-------------------------------")
+
+    return {}
+
+
+def show_high_scores():
     return {}
 
 
