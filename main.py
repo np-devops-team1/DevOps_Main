@@ -53,6 +53,12 @@ def run_game(board_tracker, buildings_tracker, current_turn, board_metadata):
         else:
             proceed_next_turn = False
 
+    print("\nFinal Layout of Simp City:")
+    display_board(board_tracker, buildings_tracker, board_metadata)
+    score = see_current_score(board_tracker)["score"]
+
+    register_high_score(score)
+
     return {}
 
 
