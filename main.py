@@ -401,8 +401,9 @@ def calculate_prk_score(buildings_tracker):
                 if ([building_row, building_column]) not in global_visited:
                     # Find the number of rows
                     visited = []
-                    prk_score = prk_score + prk_score_dic.get(str(dfs(visited, buildings_tracker, [building_row, building_column])))
-                    prk_history.append(prk_score)
+                    current_score = prk_score_dic.get(str(dfs(visited, buildings_tracker, [building_row, building_column])))
+                    prk_score = prk_score + current_score
+                    prk_history.append(current_score)
 
     return prk_score, prk_history
 
