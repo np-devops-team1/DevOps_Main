@@ -53,6 +53,12 @@ def run_game(board_tracker, buildings_tracker, current_turn, board_metadata):
         else:
             proceed_next_turn = False
 
+    print("\nFinal Layout of Simp City:")
+    display_board(board_tracker, buildings_tracker, board_metadata)
+    score = see_current_score(board_tracker)["score"]
+
+    register_high_score(score)
+
     return {}
 
 
@@ -633,7 +639,88 @@ def validate_building_pool_selection(buildings, new_pool):
     return True
 
 
+def load_high_scores():
+    if exists("high_score_data.txt"):
+        high_score_data_file = open("high_score_data.txt", "r")
+    else:
+        return {"err": "No high score detected"}
+
+    file_data = high_score_data_file.read()
+    if file_data == "":
+        return {"err": "No high score detected"}
+
+    try:
+        high_score_data = ast.literal_eval(file_data)
+        high_score_data_file.close()
+        return {"data": high_score_data}
+    except Exception as err:
+        return {"err": "error loading high score: " + str(err)}
+
+
+def register_high_score(score):
+    return_values = load_high_scores()
+    high_score_data_file = open("high_score_data.txt", "w")
+
+    if "err" in return_values:
+        if return_values["err"] == "No high score detected":
+            print("Congratulations! You made the high score board at position 1!")
+            name = input("Please enter you name (max 20 chars): ")
+
+            high_score_data = [{"name": name, "score": score}]
+            high_score_data_file.write(str(high_score_data))
+            high_score_data_file.close()
+
+            show_high_scores()
+
+    elif "data" in return_values:
+        high_score_data = return_values["data"]
+
+        for index, score_entry in enumerate(high_score_data):
+            if score > score_entry["score"]:
+                print("Congratulations! You made the high score board at position {}!".format(index + 1))
+                name = input("Please enter you name (max 20 chars): ")
+                high_score_data.insert(index, {"name": name, "score": score})
+
+                if len(high_score_data) > 10:
+                    high_score_data.pop()
+
+                high_score_data_file.write(str(high_score_data))
+                high_score_data_file.close()
+
+                show_high_scores()
+                break
+
+            elif index + 1 == len(high_score_data) and len(high_score_data) < 10:
+                print("Congratulations! You made the high score board at position {}!".format(index + 2))
+                name = input("Please enter you name (max 20 chars): ")
+                high_score_data.insert(index + 1, {"name": name, "score": score})
+
+                high_score_data_file.write(str(high_score_data))
+                high_score_data_file.close()
+
+                show_high_scores()
+                break
+
+    else:
+        high_score_data_file.close()
+
+
 def show_high_scores():
+    return_values = load_high_scores()
+    if "err" in return_values:
+        print(return_values["err"])
+
+    elif "data" in return_values:
+        print("\n--------- HIGH SCORES ---------")
+        print("Pos Player                Score")
+        print("--- ------                -----")
+
+        high_score_data = return_values["data"]
+        for position, score_entry in enumerate(high_score_data, start=1):
+            print("{:>2}. {:<21} {:>5}".format(position, score_entry["name"], score_entry["score"]))
+
+        print("-------------------------------")
+
     return {}
 
 
