@@ -547,7 +547,7 @@ def see_current_score(buildings_tracker):
         shp_score + hwy_score + prk_score + mon_score
     print("Total Score = ", TLScore)
 
-    return {"proceed_next_turn": False}
+    return {"proceed_next_turn": False, "score": TLScore}
 
 
 def print_score_all(score_all):
